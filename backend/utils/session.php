@@ -1,6 +1,27 @@
 <?php
+// Sigurnosne session postavke
+ini_set('session.cookie_httponly', 1);  // Sprečava XSS napade
+ini_set('session.use_only_cookies', 1); // Samo cookies, ne URL
+ini_set('session.cookie_secure', 0);    // Postaviti na 1 za HTTPS
+ini_set('session.cookie_samesite', 'Strict'); // CSRF zaštita
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
+    
+    // Regeneriši session ID periodično (anti session hijacking)
+    if (!isset($_SESSION['last_regeneration'])) {
+        $_SESSION['last_regeneration'] = time();
+    } elseif (time() - $_SESSION['last_regeneration'] > 1800) { // 30 minuta
+        session_regenerate_id(true);
+        $_SESSION['last_regeneration'] = time();
+    }
+    
+    // Session timeout (2 sata)
+    if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 7200)) {
+        session_unset();
+        session_destroy();
+    }
+    $_SESSION['last_activity'] = time();
 }
 
 

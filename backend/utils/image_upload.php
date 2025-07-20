@@ -6,12 +6,26 @@ function uploadDrinkImage($file) {
         return ['success' => false, 'error' => 'Greška pri upload-u fajla'];
     }
     
-    // Proveri tip fajla
-    $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-    $file_type = $file['type'];
+    // SIGURNOSNA PROVERA: Prvo proveri stvarni tip fajla, ne samo MIME
+    $real_file_type = mime_content_type($file['tmp_name']);
+    $allowed_mime_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
     
-    if (!in_array($file_type, $allowed_types)) {
-        return ['success' => false, 'error' => 'Dozvoljen je samo upload slika (JPEG, PNG, GIF, WebP)'];
+    if (!in_array($real_file_type, $allowed_mime_types)) {
+        return ['success' => false, 'error' => 'Dozvoljen je samo upload pravih slika'];
+    }
+    
+    // DODATNA SIGURNOST: Proveri da li je stvarno slika
+    $image_info = getimagesize($file['tmp_name']);
+    if ($image_info === false) {
+        return ['success' => false, 'error' => 'Fajl nije valjna slika'];
+    }
+    
+    // Proveri ekstenziju fajla
+    $file_extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    
+    if (!in_array($file_extension, $allowed_extensions)) {
+        return ['success' => false, 'error' => 'Nepoznata ekstenzija fajla'];
     }
     
     // Proveri veličinu fajla (max 5MB)
@@ -20,13 +34,21 @@ function uploadDrinkImage($file) {
         return ['success' => false, 'error' => 'Slika ne može biti veća od 5MB'];
     }
     
-    // Generiši jedinstveno ime fajla
-    $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $new_filename = uniqid('drink_') . '_' . time() . '.' . $file_extension;
+    // Generiši sigurno ime fajla (bez originalnog imena)
+    $safe_extension = $file_extension === 'jpeg' ? 'jpg' : $file_extension;
+    $new_filename = uniqid('drink_') . '_' . time() . '.' . $safe_extension;
     
     // Definiši putanje
     $upload_dir = __DIR__ . '/../uploads/drinks/';
     $file_path = $upload_dir . $new_filename;
+    
+    // SIGURNOST: Proveri da putanja ne izlazi iz upload direktorijuma
+    $real_upload_dir = realpath($upload_dir);
+    $real_file_path = realpath(dirname($file_path)) . '/' . basename($file_path);
+    
+    if (strpos($real_file_path, $real_upload_dir) !== 0) {
+        return ['success' => false, 'error' => 'Nedozvoljena putanja fajla'];
+    }
     
     // Kreiranje direktorijuma ako ne postoji
     if (!is_dir($upload_dir)) {
@@ -37,6 +59,9 @@ function uploadDrinkImage($file) {
     
     // Premesti fajl
     if (move_uploaded_file($file['tmp_name'], $file_path)) {
+        // SIGURNOST: Promeni permisije fajla
+        chmod($file_path, 0644);
+        
         // Vrati relativnu putanju za bazu
         $relative_path = '/TimeOut/backend/uploads/drinks/' . $new_filename;
         return ['success' => true, 'image_url' => $relative_path, 'filename' => $new_filename];
