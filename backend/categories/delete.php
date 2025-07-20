@@ -2,6 +2,7 @@
 require_once '../database/cors.php';
 require_once '../database/db.php';
 require_once '../utils/session.php';
+require_once '../utils/image_upload.php';
 
 // Proveri da li je korisnik ulogovan
 requireLogin();
@@ -34,8 +35,9 @@ if (!$category_id || $category_id <= 0) {
 }
 
 try {
-    // Prvo proveri da li kategorija postoji
-    $stmt = $conn->prepare("SELECT id, name FROM categories WHERE id = ?");
+
+    // Prvo proveri da li kategorija postoji i uzmi podatke uključujući image_url
+    $stmt = $conn->prepare("SELECT id, name, image_url FROM categories WHERE id = ?");
     $stmt->bind_param("i", $category_id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -69,12 +71,18 @@ try {
     $stmt->bind_param("i", $category_id);
     
     if ($stmt->execute()) {
+        // Obriši sliku sa servera ako postoji
+        if ($category['image_url']) {
+            deleteCategoryImage($category['image_url']);
+        }
+        
         echo json_encode([
             'success' => true,
             'message' => 'Kategorija je uspešno obrisana',
             'deleted_category' => [
                 'id' => $category['id'],
-                'name' => $category['name']
+                'name' => $category['name'],
+                'image_url' => $category['image_url']
             ]
         ]);
     } else {

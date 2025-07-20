@@ -6,7 +6,8 @@ CREATE TABLE users (
 
 CREATE TABLE categories (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL
+  name VARCHAR(100) NOT NULL,
+  image_url VARCHAR(255)
 );
 
 CREATE TABLE drinks (
