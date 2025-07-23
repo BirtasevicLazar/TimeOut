@@ -6,6 +6,8 @@ import CategoryList from './components/CategoryList'
 import DrinksList from './components/DrinksList'
 import Contact from './components/Contact'
 import AdminApp from './admin/pages/AdminApp'
+import ScrollToTop from './components/ScrollToTop'
+import useScrollToTop from './hooks/useScrollToTop'
 import './App.css'
 
 function App() {
@@ -34,22 +36,29 @@ function App() {
     </>
   )
 
+  const PublicRoutes = () => {
+    useScrollToTop() // Hook će automatski skrolovati na vrh pri promeni rute
+    
+    return (
+      <>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </>
+    )
+  }
+
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         {/* Admin routes - bez navbar-a */}
         <Route path="/admin/*" element={<AdminApp />} />
         
         {/* Public routes - sa navbar-om */}
-        <Route path="/*" element={
-          <>
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/contact" element={<Contact />} />
-            </Routes>
-          </>
-        } />
+        <Route path="/*" element={<PublicRoutes />} />
       </Routes>
     </Router>
   )

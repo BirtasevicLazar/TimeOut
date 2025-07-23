@@ -1,9 +1,9 @@
-const API_BASE_URL = 'http://localhost:8888/TimeOut/backend'
+import { API_BASE_URL, getApiUrl } from '../../utils/api'
 
 // Dobij sva pića
 export const getDrinks = async (categoryId = null) => {
   try {
-    let url = `${API_BASE_URL}/drinks/get.php`
+    let url = getApiUrl('/drinks/get.php')
     if (categoryId) {
       url += `?category_id=${categoryId}`
     }
@@ -28,7 +28,7 @@ export const getDrinks = async (categoryId = null) => {
 // Dobij jedno piće po ID-u
 export const getDrink = async (id) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/drinks/get.php?id=${id}`, {
+    const response = await fetch(getApiUrl(`/drinks/get.php?id=${id}`), {
       method: 'GET',
       credentials: 'include'
     })
@@ -64,7 +64,7 @@ export const createDrink = async (name, description = '', price = null, category
       formData.append('image', image)
     }
 
-    const response = await fetch(`${API_BASE_URL}/drinks/create.php`, {
+    const response = await fetch(getApiUrl('/drinks/create.php'), {
       method: 'POST',
       credentials: 'include',
       body: formData
@@ -103,7 +103,7 @@ export const updateDrink = async (id, name, description = '', price = null, cate
       formData.append('image', image)
     }
 
-    const response = await fetch(`${API_BASE_URL}/drinks/update.php`, {
+    const response = await fetch(getApiUrl('/drinks/update.php'), {
       method: 'POST',
       credentials: 'include',
       body: formData
@@ -124,7 +124,7 @@ export const updateDrink = async (id, name, description = '', price = null, cate
 // Obriši piće
 export const deleteDrink = async (id) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/drinks/delete.php?id=${id}`, {
+    const response = await fetch(getApiUrl(`/drinks/delete.php?id=${id}`), {
       method: 'DELETE',
       credentials: 'include'
     })

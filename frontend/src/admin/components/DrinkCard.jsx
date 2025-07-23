@@ -1,6 +1,8 @@
+import { getDrinkImageUrl } from '../../utils/api'
+
 const DrinkCard = ({ drink, onEdit, onDelete }) => {
   const imageUrl = drink.image_url 
-    ? `http://localhost:8888${drink.image_url}`
+    ? getDrinkImageUrl(drink.image_url)
     : null
 
   const formatPrice = (price) => {

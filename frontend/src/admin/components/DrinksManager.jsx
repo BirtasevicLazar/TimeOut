@@ -18,6 +18,18 @@ const DrinksManager = () => {
   const [sortBy, setSortBy] = useState('name') // name, price, category
   const [sortOrder, setSortOrder] = useState('asc') // asc, desc
 
+  // Scroll to top on component mount - optimized for mobile
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      })
+    })
+  }, [])
+
   useEffect(() => {
     loadDrinks()
     loadCategories()
@@ -110,6 +122,12 @@ const DrinksManager = () => {
         }
         setIsModalOpen(false)
         setEditingDrink(null)
+        
+        // Scroll to top after successful action
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        })
       } else {
         alert('Greška: ' + result.error)
       }

@@ -27,6 +27,18 @@ const Navbar = () => {
     setIsMenuOpen(false)
   }
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  const handleInternalLinkClick = () => {
+    closeMenu()
+    scrollToTop()
+  }
+
   // Close menu when clicking outside
   useEffect(() => {
     if (isMenuOpen) {
@@ -126,6 +138,7 @@ const Navbar = () => {
                   <Link
                     key={item.name}
                     to={item.href}
+                    onClick={handleInternalLinkClick}
                     className={`font-medium transition-colors duration-300 hover:text-orange-400 ${
                       scrolled ? 'text-gray-700' : 'text-white'
                     } ${location.pathname === item.href ? 'text-orange-400' : ''}`}
@@ -156,7 +169,7 @@ const Navbar = () => {
       {/* Mobile Menu Overlay with Framer Motion */}
       <AnimatePresence>
         {isMenuOpen && (
-          <div className="fixed inset-0 z-40 md:hidden">
+          <div className="fixed inset-0 z-60 md:hidden">
             {/* Background overlay */}
             <motion.div 
               className="absolute inset-0 bg-black/50"
@@ -170,7 +183,7 @@ const Navbar = () => {
             
             {/* Menu Panel */}
             <motion.div 
-              className="absolute top-0 right-0 h-full w-70 bg-white shadow-2xl"
+              className="absolute top-0 right-0 h-full w-70 bg-white shadow-2xl z-10"
               variants={menuVariants}
               initial="hidden"
               animate="visible"
@@ -214,7 +227,7 @@ const Navbar = () => {
                     <MotionLink
                       key={item.name}
                       to={item.href}
-                      onClick={closeMenu}
+                      onClick={handleInternalLinkClick}
                       className={`flex items-center w-full px-6 py-4 text-left text-gray-800 hover:bg-orange-50 hover:text-orange-600 transition-colors duration-200 font-medium ${
                         location.pathname === item.href ? 'bg-orange-50 text-orange-600' : ''
                       }`}

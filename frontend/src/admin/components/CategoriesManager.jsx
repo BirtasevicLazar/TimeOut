@@ -17,6 +17,18 @@ const CategoriesManager = () => {
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [categoryDrinksCount, setCategoryDrinksCount] = useState(0)
 
+  // Scroll to top on component mount - optimized for mobile
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      })
+    })
+  }, [])
+
   useEffect(() => {
     loadCategories()
   }, [])
@@ -44,6 +56,15 @@ const CategoriesManager = () => {
       setShowAddModal(false)
       loadCategories() // Osvežiti listu
       
+      // Scroll to top after successful creation - optimized for mobile
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: prefersReducedMotion ? 'auto' : 'smooth'
+        })
+      })
+      
       // Očisti success poruku nakon 3 sekunde
       setTimeout(() => setSuccess(''), 3000)
     } else {
@@ -61,6 +82,15 @@ const CategoriesManager = () => {
       setShowEditModal(false)
       setSelectedCategory(null)
       loadCategories() // Osvežiti listu
+      
+      // Scroll to top after successful edit - optimized for mobile  
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: prefersReducedMotion ? 'auto' : 'smooth'
+        })
+      })
       
       // Očisti success poruku nakon 3 sekunde
       setTimeout(() => setSuccess(''), 3000)

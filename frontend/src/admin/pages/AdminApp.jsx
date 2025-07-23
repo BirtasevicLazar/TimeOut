@@ -4,12 +4,17 @@ import AdminLogin from '../components/AdminLogin'
 import AdminDashboard from '../components/AdminDashboard'
 import CategoriesManager from '../components/CategoriesManager'
 import DrinksManager from '../components/DrinksManager'
+import ScrollToTop from '../../components/ScrollToTop'
+import useScrollToTop from '../../hooks/useScrollToTop'
 import { checkAuthStatus, getCurrentUser } from '../utils/auth'
 
 const AdminApp = () => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  
+  // Hook za automatsko skrolovanje na vrh pri promeni admin rute
+  useScrollToTop()
 
   useEffect(() => {
     initializeAuth()
@@ -68,6 +73,7 @@ const AdminApp = () => {
 
   return (
     <>
+      <ScrollToTop />
       {isAuthenticated ? (
         <Routes>
           <Route path="/" element={<AdminDashboard user={user} onLogout={handleLogout} />} />

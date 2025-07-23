@@ -1,9 +1,9 @@
-const API_BASE_URL = 'http://localhost:8888/TimeOut/backend'
+import { API_BASE_URL, getApiUrl } from '../../utils/api'
 
 // Dobij sve kategorije
 export const getCategories = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/categories/get.php`, {
+    const response = await fetch(getApiUrl('/categories/get.php'), {
       method: 'GET',
       credentials: 'include'
     })
@@ -23,7 +23,7 @@ export const getCategories = async () => {
 // Dobij jednu kategoriju po ID-u
 export const getCategory = async (id) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/categories/get.php?id=${id}`, {
+    const response = await fetch(getApiUrl(`/categories/get.php?id=${id}`), {
       method: 'GET',
       credentials: 'include'
     })
@@ -50,7 +50,7 @@ export const createCategory = async (name, image = null) => {
       formData.append('image', image)
     }
 
-    const response = await fetch(`${API_BASE_URL}/categories/create.php`, {
+    const response = await fetch(getApiUrl('/categories/create.php'), {
       method: 'POST',
       credentials: 'include',
       body: formData
@@ -80,7 +80,7 @@ export const updateCategory = async (id, name, image = null) => {
       formData.append('image', image)
     }
 
-    const response = await fetch(`${API_BASE_URL}/categories/update.php`, {
+    const response = await fetch(getApiUrl('/categories/update.php'), {
       method: 'POST',
       credentials: 'include',
       body: formData
@@ -101,7 +101,7 @@ export const updateCategory = async (id, name, image = null) => {
 // Obriši kategoriju
 export const deleteCategory = async (id) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/categories/delete.php?id=${id}`, {
+    const response = await fetch(getApiUrl(`/categories/delete.php?id=${id}`), {
       method: 'DELETE',
       credentials: 'include'
     })
@@ -121,7 +121,7 @@ export const deleteCategory = async (id) => {
 // Proveri koliko pića ima u kategoriji
 export const getCategoryDrinksCount = async (categoryId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/drinks/get.php?category_id=${categoryId}`, {
+    const response = await fetch(getApiUrl(`/drinks/get.php?category_id=${categoryId}`), {
       method: 'GET',
       credentials: 'include'
     })

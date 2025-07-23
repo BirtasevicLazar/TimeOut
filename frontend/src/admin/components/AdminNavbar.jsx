@@ -58,6 +58,13 @@ const AdminNavbar = ({ user, onLogout }) => {
       action: () => {
         closeMenu()
         navigate('/admin/kategorije')
+        // Scroll to top after navigation
+        setTimeout(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          })
+        }, 100)
       }
     },
     { 
@@ -71,6 +78,13 @@ const AdminNavbar = ({ user, onLogout }) => {
       action: () => {
         closeMenu()
         navigate('/admin/pica')
+        // Scroll to top after navigation
+        setTimeout(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          })
+        }, 100)
       }
     },
     { 

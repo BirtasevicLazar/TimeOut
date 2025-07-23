@@ -1,13 +1,14 @@
 /* App.css - Minimal styles for React components */
+@import './styles/mobile-optimizations.css';
 
 .App {
   min-height: 100vh;
   width: 100%;
 }
 
-/* Ensure smooth transitions */
+/* Optimize transitions for mobile */
 * {
-  transition: color 0.3s ease, background-color 0.3s ease;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 /* Mobile-first responsive design */

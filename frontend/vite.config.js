@@ -6,10 +6,11 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
+    host: '0.0.0.0', // Omogućava pristup preko IP adrese
     port: 4000,
     proxy: {
       '/api': {
-        target: 'http://localhost:8888/TimeOut/backend',
+        target: 'http://192.168.1.5:8888/TimeOut/backend',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },

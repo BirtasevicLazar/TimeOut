@@ -6,12 +6,27 @@ body {
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
+  /* Mobile optimizations */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
 }
 
-
-/* Smooth scrolling */
+/* Optimized smooth scrolling with reduced motion support */
 html {
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Mobile performance optimizations */
+* {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* Custom scrollbar for webkit browsers */

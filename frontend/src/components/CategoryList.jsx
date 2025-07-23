@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
+import { getImageUrl } from '../utils/api'
 
 const CategoryCard = ({ category, onClick }) => {
   const hasImage = category.image_url && category.image_url.trim() !== ''
-  const imageUrl = hasImage ? `http://localhost:8888${category.image_url}` : null
+  const imageUrl = hasImage ? getImageUrl(category.image_url) : null
   
   return (
     <div 
       onClick={() => onClick(category)}
-      className="relative h-32 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-[1.02] active:scale-[0.98]"
+      className="relative h-32 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 cursor-pointer mobile-optimized fast-tap"
       style={{
         backgroundImage: imageUrl 
           ? `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${imageUrl})`
@@ -24,8 +25,8 @@ const CategoryCard = ({ category, onClick }) => {
         </h3>
       </div>
       
-      {/* Subtle hover overlay */}
-      <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-all duration-300" />
+      {/* Subtle hover overlay - optimized for mobile */}
+      <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-200" />
     </div>
   )
 }

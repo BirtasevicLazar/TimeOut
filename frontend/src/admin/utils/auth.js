@@ -1,9 +1,9 @@
-const API_BASE_URL = 'http://localhost:8888/TimeOut/backend'
+import { API_BASE_URL, getApiUrl } from '../../utils/api'
 
 // Login funkcija
 export const loginAdmin = async (username, password) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/login.php`, {
+    const response = await fetch(getApiUrl('/auth/login.php'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export const loginAdmin = async (username, password) => {
 // Logout funkcija
 export const logoutAdmin = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/logout.php`, {
+    const response = await fetch(getApiUrl('/auth/logout.php'), {
       method: 'POST',
       credentials: 'include'
     })
@@ -56,7 +56,7 @@ export const logoutAdmin = async () => {
 // Proveri da li je admin ulogovan
 export const checkAuthStatus = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/me.php`, {
+    const response = await fetch(getApiUrl('/auth/me.php'), {
       method: 'GET',
       credentials: 'include'
     })

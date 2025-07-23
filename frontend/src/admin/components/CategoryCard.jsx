@@ -1,6 +1,8 @@
+import { getCategoryImageUrl } from '../../utils/api'
+
 const CategoryCard = ({ category, onEdit, onDelete }) => {
   const imageUrl = category.image_url 
-    ? `http://localhost:8888/TimeOut/backend/uploads/categories/${category.image_url.split('/').pop()}`
+    ? getCategoryImageUrl(category.image_url)
     : null
 
   return (

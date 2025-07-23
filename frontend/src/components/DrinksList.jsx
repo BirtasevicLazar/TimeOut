@@ -1,18 +1,21 @@
 import { useState, useEffect } from 'react'
+import { getDrinkImageUrl, getApiUrl } from '../utils/api'
 
 const DrinkCard = ({ drink }) => {
   const hasImage = drink.image_url && drink.image_url.trim() !== ''
-  const imageUrl = hasImage ? `http://localhost:8888${drink.image_url}` : null
+  const imageUrl = hasImage ? getDrinkImageUrl(drink.image_url) : null
   
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 mobile-optimized fast-tap">
       {/* Image Section */}
       <div className="relative h-48 overflow-hidden">
         {imageUrl ? (
           <img 
             src={imageUrl} 
             alt={drink.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover mobile-image"
+            loading="lazy"
+            decoding="async"
             onError={(e) => {
               e.target.style.display = 'none'
               e.target.nextSibling.style.display = 'flex'
@@ -56,9 +59,30 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  const handleBackToCategories = () => {
+    onBack()
+    // Optimized scroll for mobile devices
+    setTimeout(() => {
+      // Check if user prefers reduced motion
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      })
+    }, 50) // Reduced timeout for better responsiveness
+  }
+
   useEffect(() => {
     if (categoryId) {
       fetchDrinks()
+      // Optimized scroll for mobile - check for reduced motion preference
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      })
     }
   }, [categoryId])
 
@@ -67,7 +91,7 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
       setLoading(true)
       setError(null)
       
-      const response = await fetch(`http://localhost:8888/TimeOut/backend/drinks/get.php?category_id=${categoryId}`, {
+      const response = await fetch(getApiUrl('/drinks/get.php') + `?category_id=${categoryId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +123,7 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
           {/* Header with back button */}
           <div className="flex items-center mb-8">
             <button 
-              onClick={onBack}
+              onClick={handleBackToCategories}
               className="flex items-center text-orange-600 hover:text-orange-700 transition-colors mr-4"
             >
               <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,14 +137,14 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
             {categoryName}
           </h2>
           
-          {/* Loading skeleton */}
+          {/* Loading skeleton - optimized for mobile */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((item) => (
-              <div key={item} className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                <div className="h-48 bg-gray-200 animate-pulse" />
+              <div key={item} className="bg-white rounded-2xl shadow-lg overflow-hidden mobile-optimized">
+                <div className="h-48 bg-gray-200 animate-pulse" style={{ animationDuration: '1.5s' }} />
                 <div className="p-4">
-                  <div className="h-6 bg-gray-200 rounded animate-pulse mb-2" />
-                  <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-6 bg-gray-200 rounded animate-pulse mb-2" style={{ animationDuration: '1.5s' }} />
+                  <div className="h-4 bg-gray-200 rounded animate-pulse" style={{ animationDuration: '1.5s' }} />
                 </div>
               </div>
             ))}
@@ -137,7 +161,7 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
           {/* Header with back button */}
           <div className="flex items-center mb-8">
             <button 
-              onClick={onBack}
+              onClick={handleBackToCategories}
               className="flex items-center text-orange-600 hover:text-orange-700 transition-colors mr-4"
             >
               <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -170,7 +194,7 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
         {/* Header with back button */}
         <div className="flex items-center mb-8">
           <button 
-            onClick={onBack}
+            onClick={handleBackToCategories}
             className="flex items-center text-orange-600 hover:text-orange-700 transition-colors font-medium"
           >
             <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
