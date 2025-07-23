@@ -4,9 +4,9 @@ header('Content-Type: application/json');
 
 // CORS konfiguracija - restriktivnija
 $allowed_origins = [
-    'http://localhost:3000',    // React dev server
+    'http://localhost:4000',    // React dev server
     'http://localhost:8080',    // Vue/Angular dev
-    'http://127.0.0.1:3000',
+    'http://127.0.0.1:4000',
     'http://127.0.0.1:5500',    // Live Server
     'https://yourdomain.com'    // Production domain
 ];

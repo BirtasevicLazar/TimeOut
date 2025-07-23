@@ -1,7 +1,7 @@
 <?php
 require_once '../database/cors.php';
 require_once '../database/db.php';
-require_once '../utils/session.php';
+// require_once '../utils/session.php'; // Nije potrebno za javne GET operacije
 
 // GET operacije ne zahtevaju autentifikaciju - svi mogu da vide pića
 // requireLogin(); // Uklonjen zahtev za login

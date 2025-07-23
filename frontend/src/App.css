@@ -1,0 +1,19 @@
+/* App.css - Minimal styles for React components */
+
+.App {
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Ensure smooth transitions */
+* {
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
