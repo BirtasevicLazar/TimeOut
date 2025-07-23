@@ -12,7 +12,6 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState(null)
 
   const handleCategorySelect = (category) => {
-    console.log('Selected category:', category)
     setSelectedCategory(category)
   }
 

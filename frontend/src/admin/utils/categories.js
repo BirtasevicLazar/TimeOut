@@ -16,7 +16,6 @@ export const getCategories = async () => {
       return { success: false, error: data.error }
     }
   } catch (error) {
-    console.error('Get categories error:', error)
     return { success: false, error: 'Greška pri dobijanju kategorija' }
   }
 }
@@ -37,7 +36,6 @@ export const getCategory = async (id) => {
       return { success: false, error: data.error }
     }
   } catch (error) {
-    console.error('Get category error:', error)
     return { success: false, error: 'Greška pri dobijanju kategorije' }
   }
 }
@@ -66,7 +64,6 @@ export const createCategory = async (name, image = null) => {
       return { success: false, error: data.error }
     }
   } catch (error) {
-    console.error('Create category error:', error)
     return { success: false, error: 'Greška pri kreiranju kategorije' }
   }
 }
@@ -97,7 +94,6 @@ export const updateCategory = async (id, name, image = null) => {
       return { success: false, error: data.error }
     }
   } catch (error) {
-    console.error('Update category error:', error)
     return { success: false, error: 'Greška pri ažuriranju kategorije' }
   }
 }
@@ -115,10 +111,29 @@ export const deleteCategory = async (id) => {
     if (response.ok) {
       return { success: true, message: data.message }
     } else {
+      return { success: false, error: data.error, drinks_count: data.drinks_count }
+    }
+  } catch (error) {
+    return { success: false, error: 'Greška pri brisanju kategorije' }
+  }
+}
+
+// Proveri koliko pića ima u kategoriji
+export const getCategoryDrinksCount = async (categoryId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/drinks/get.php?category_id=${categoryId}`, {
+      method: 'GET',
+      credentials: 'include'
+    })
+
+    const data = await response.json()
+
+    if (response.ok) {
+      return { success: true, count: data.count || 0 }
+    } else {
       return { success: false, error: data.error }
     }
   } catch (error) {
-    console.error('Delete category error:', error)
-    return { success: false, error: 'Greška pri brisanju kategorije' }
+    return { success: false, error: 'Greška pri dobijanju broja pića' }
   }
 }

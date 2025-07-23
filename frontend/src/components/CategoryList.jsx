@@ -44,8 +44,6 @@ const CategoryList = ({ onCategorySelect }) => {
       setLoading(true)
       setError(null)
       
-      console.log('Fetching categories from API...')
-      
       const response = await fetch('/api/categories/get.php', {
         method: 'GET',
         headers: {
@@ -53,31 +51,25 @@ const CategoryList = ({ onCategorySelect }) => {
         },
       })
       
-      console.log('Response status:', response.status)
-      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
       
       const data = await response.json()
-      console.log('Received data:', data)
       
       if (data.error) {
         throw new Error(data.error)
       }
       
       setCategories(data.categories || [])
-      console.log('Categories set:', data.categories)
     } catch (err) {
       setError(err.message)
-      console.error('Error fetching categories:', err)
     } finally {
       setLoading(false)
     }
   }
 
   const handleCategoryClick = (category) => {
-    console.log('Kliknuta kategorija:', category)
     if (onCategorySelect) {
       onCategorySelect(category)
     }

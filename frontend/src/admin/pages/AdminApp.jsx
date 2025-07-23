@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import AdminLogin from '../components/AdminLogin'
 import AdminDashboard from '../components/AdminDashboard'
+import CategoriesManager from '../components/CategoriesManager'
+import DrinksManager from '../components/DrinksManager'
 import { checkAuthStatus, getCurrentUser } from '../utils/auth'
 
 const AdminApp = () => {
@@ -66,7 +69,12 @@ const AdminApp = () => {
   return (
     <>
       {isAuthenticated ? (
-        <AdminDashboard user={user} onLogout={handleLogout} />
+        <Routes>
+          <Route path="/" element={<AdminDashboard user={user} onLogout={handleLogout} />} />
+          <Route path="/kategorije" element={<AdminDashboard user={user} onLogout={handleLogout}><CategoriesManager /></AdminDashboard>} />
+          <Route path="/pica" element={<AdminDashboard user={user} onLogout={handleLogout}><DrinksManager /></AdminDashboard>} />
+          <Route path="*" element={<Navigate to="/admin" replace />} />
+        </Routes>
       ) : (
         <AdminLogin onLoginSuccess={handleLoginSuccess} />
       )}

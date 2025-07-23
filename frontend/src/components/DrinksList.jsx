@@ -67,8 +67,6 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
       setLoading(true)
       setError(null)
       
-      console.log(`Fetching drinks for category ${categoryId}...`)
-      
       const response = await fetch(`http://localhost:8888/TimeOut/backend/drinks/get.php?category_id=${categoryId}`, {
         method: 'GET',
         headers: {
@@ -76,24 +74,19 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
         },
       })
       
-      console.log('Response status:', response.status)
-      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
       
       const data = await response.json()
-      console.log('Received drinks data:', data)
       
       if (!data.success) {
         throw new Error(data.error || 'Failed to fetch drinks')
       }
       
       setDrinks(data.drinks || [])
-      console.log('Drinks set:', data.drinks)
     } catch (err) {
       setError(err.message)
-      console.error('Error fetching drinks:', err)
     } finally {
       setLoading(false)
     }

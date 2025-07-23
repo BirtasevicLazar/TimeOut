@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
 
-const MotionLink = motion(Link)
+const MotionLink = motion.create(Link)
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false)

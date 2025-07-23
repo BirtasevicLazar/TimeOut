@@ -25,8 +25,7 @@ export const loginAdmin = async (username, password) => {
       return { success: false, error: data.error }
     }
   } catch (error) {
-    console.error('Login error:', error)
-    return { success: false, error: 'Greška pri povezivanju sa serverom' }
+    return { success: false, error: 'Greška pri prijavljivanju' }
   }
 }
 
@@ -50,7 +49,6 @@ export const logoutAdmin = async () => {
   } catch (error) {
     // Uvek očisti localStorage
     localStorage.removeItem('admin_user')
-    console.error('Logout error:', error)
     return { success: false, error: 'Greška pri odjavljivanju' }
   }
 }
@@ -74,7 +72,6 @@ export const checkAuthStatus = async () => {
       return { success: false }
     }
   } catch (error) {
-    console.error('Auth check error:', error)
     localStorage.removeItem('admin_user')
     return { success: false }
   }
@@ -86,7 +83,6 @@ export const getCurrentUser = () => {
     const user = localStorage.getItem('admin_user')
     return user ? JSON.parse(user) : null
   } catch (error) {
-    console.error('Error getting current user:', error)
     localStorage.removeItem('admin_user')
     return null
   }
