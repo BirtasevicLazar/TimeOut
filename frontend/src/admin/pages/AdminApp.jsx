@@ -28,26 +28,28 @@ const AdminApp = () => {
     if (localUser) {
       setUser(localUser)
       setIsAuthenticated(true)
+      setLoading(false) // Završi loading odmah
       
-      // Zatim proveri sa serverom u pozadini
-      const authStatus = await checkAuthStatus()
-      if (!authStatus.success) {
-        // Ako server kaže da nismo autentifikovani, očisti stanje
-        handleLogout()
-      } else {
-        // Ažuriraj korisničke podatke sa servera
-        setUser(authStatus.user)
-      }
+      // Zatim u pozadini proveri sa serverom (bez blokiranja UI)
+      // SAMO kada je korisnik već "ulogovan" lokalno
+      setTimeout(async () => {
+        const authStatus = await checkAuthStatus()
+        if (authStatus.inProgress) {
+          return // Preskoči ako je već u toku
+        }
+        if (!authStatus.success && !authStatus.networkError) {
+          console.log('Background auth check failed - session expired')
+          handleLogout()
+        } else if (authStatus.success && authStatus.user) {
+          // Ažuriraj korisničke podatke sa servera
+          setUser(authStatus.user)
+        }
+      }, 500) // Sačekaj malo da se UI učita
     } else {
-      // Nema korisnika u localStorage, proveri sa serverom
-      const authStatus = await checkAuthStatus()
-      if (authStatus.success) {
-        setUser(authStatus.user)
-        setIsAuthenticated(true)
-      }
+      // Nema korisnika u localStorage - samo završi loading, ne pozivaj server
+      console.log('No user in localStorage, showing login form')
+      setLoading(false)
     }
-    
-    setLoading(false)
   }
 
   const handleLoginSuccess = (userData) => {

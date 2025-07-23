@@ -1,54 +1,40 @@
 import { useState, useEffect } from 'react'
-import { getDrinkImageUrl, getApiUrl } from '../utils/api'
+import { getApiUrl } from '../utils/api'
 
 const DrinkCard = ({ drink }) => {
-  const hasImage = drink.image_url && drink.image_url.trim() !== ''
-  const imageUrl = hasImage ? getDrinkImageUrl(drink.image_url) : null
-  
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 mobile-optimized fast-tap">
-      {/* Image Section */}
-      <div className="relative h-48 overflow-hidden">
-        {imageUrl ? (
-          <img 
-            src={imageUrl} 
-            alt={drink.name}
-            className="w-full h-full object-cover mobile-image"
-            loading="lazy"
-            decoding="async"
-            onError={(e) => {
-              e.target.style.display = 'none'
-              e.target.nextSibling.style.display = 'flex'
-            }}
-          />
-        ) : null}
-        
-        {/* Fallback background */}
-        <div 
-          className={`${imageUrl ? 'hidden' : 'flex'} w-full h-full items-center justify-center`}
-          style={{
-            background: 'linear-gradient(135deg, #ea5a1a 0%, #f97316 100%)'
-          }}
-        >
-          <div className="text-white text-4xl font-bold">
-            {drink.name.charAt(0)}
-          </div>
-        </div>
-        
-        {/* Price badge */}
-        <div className="absolute top-3 right-3 bg-orange-600 text-white px-3 py-1 rounded-full font-bold text-sm">
-          {drink.price} RSD
+    <div className="bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-lg p-6 hover:shadow-lg hover:bg-white transition-all duration-200 mobile-optimized fast-tap group">
+      {/* Header with name and price */}
+      <div className="flex justify-between items-baseline mb-4">
+        <h3 className="text-xl font-bold text-gray-900 leading-tight flex-1 pr-6 group-hover:text-orange-800 transition-colors">
+          {drink.name}
+        </h3>
+        <div className="flex items-baseline">
+          <span className="text-2xl font-bold text-orange-600 whitespace-nowrap">
+            {drink.price}
+          </span>
+          <span className="text-sm text-orange-500 ml-1 font-medium">
+            RSD
+          </span>
         </div>
       </div>
       
-      {/* Content Section */}
-      <div className="p-4">
-        <h3 className="text-xl font-bold text-gray-800 mb-2">
-          {drink.name}
-        </h3>
-        <p className="text-gray-600 text-sm leading-relaxed">
+      {/* Description */}
+      {drink.description && (
+        <p className="text-gray-600 text-sm leading-relaxed italic mb-4">
           {drink.description}
         </p>
+      )}
+      
+      {/* Decorative elements */}
+      <div className="flex items-center justify-between">
+        <div className="flex-1 border-b border-dotted border-gray-300 group-hover:border-orange-300 transition-colors"></div>
+        <div className="mx-3 text-orange-400 opacity-50 group-hover:opacity-70 transition-opacity">
+          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+        </div>
+        <div className="flex-1 border-b border-dotted border-gray-300 group-hover:border-orange-300 transition-colors"></div>
       </div>
     </div>
   )
@@ -133,21 +119,29 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
             </button>
           </div>
           
-          <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-            {categoryName}
-          </h2>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4 relative">
+              {categoryName}
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full"></div>
+            </h2>
+            <p className="text-gray-600 italic">Učitavam pića...</p>
+          </div>
           
-          {/* Loading skeleton - optimized for mobile */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((item) => (
-              <div key={item} className="bg-white rounded-2xl shadow-lg overflow-hidden mobile-optimized">
-                <div className="h-48 bg-gray-200 animate-pulse" style={{ animationDuration: '1.5s' }} />
-                <div className="p-4">
-                  <div className="h-6 bg-gray-200 rounded animate-pulse mb-2" style={{ animationDuration: '1.5s' }} />
-                  <div className="h-4 bg-gray-200 rounded animate-pulse" style={{ animationDuration: '1.5s' }} />
+          <div className="max-w-2xl mx-auto">
+            {/* Loading skeleton - optimized for mobile */}
+            <div className="space-y-4">
+              {[1, 2, 3, 4, 5, 6].map((item) => (
+                <div key={item} className="bg-white/90 backdrop-blur-sm border rounded-lg p-6 mobile-optimized">
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="h-6 bg-gray-200 rounded animate-pulse flex-1 mr-4" style={{ animationDuration: '1.5s' }} />
+                    <div className="h-6 w-20 bg-gray-200 rounded animate-pulse" style={{ animationDuration: '1.5s' }} />
+                  </div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-2" style={{ animationDuration: '1.5s' }} />
+                  <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" style={{ animationDuration: '1.5s' }} />
+                  <div className="mt-4 border-b border-dotted border-gray-300"></div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -172,13 +166,13 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
           </div>
           
           <div className="text-center">
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg max-w-md mx-auto">
-              <p className="font-bold">Greška</p>
-              <p>{error}</p>
+            <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg max-w-md mx-auto shadow-sm">
+              <p className="font-bold mb-2">Ups! Dogodila se greška</p>
+              <p className="text-sm">{error}</p>
             </div>
             <button 
               onClick={fetchDrinks}
-              className="mt-4 bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+              className="mt-6 bg-orange-600 text-white px-8 py-3 rounded-lg hover:bg-orange-700 transition-colors shadow-sm font-medium"
             >
               Pokušaj ponovo
             </button>
@@ -204,9 +198,14 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
           </button>
         </div>
         
-        <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-          {categoryName}
-        </h2>
+        {/* Category title with elegant styling */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-800 mb-4 relative">
+            {categoryName}
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full"></div>
+          </h2>
+          <p className="text-gray-600 italic">Izaberite svoje omiljeno piće</p>
+        </div>
 
         {drinks.length === 0 ? (
           <div className="text-center py-12">
@@ -218,10 +217,38 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
             <p className="text-gray-500 text-lg">Nema dostupnih pića u ovoj kategoriji</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {drinks.map((drink) => (
-              <DrinkCard key={drink.id} drink={drink} />
-            ))}
+          <div className="max-w-2xl mx-auto">
+            {/* Menu header decorative line */}
+            <div className="flex items-center justify-center mb-8">
+              <div className="flex-1 border-t border-gray-300"></div>
+              <div className="mx-4 text-orange-600">
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+              </div>
+              <div className="flex-1 border-t border-gray-300"></div>
+            </div>
+            
+            {/* Menu items */}
+            <div className="space-y-3">
+              {drinks.map((drink, index) => (
+                <div key={drink.id}>
+                  <DrinkCard drink={drink} />
+                  {index < drinks.length - 1 && <div className="h-2"></div>}
+                </div>
+              ))}
+            </div>
+            
+            {/* Footer decorative line */}
+            <div className="flex items-center justify-center mt-8">
+              <div className="flex-1 border-t border-gray-300"></div>
+              <div className="mx-4 text-orange-600">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              </div>
+              <div className="flex-1 border-t border-gray-300"></div>
+            </div>
           </div>
         )}
         

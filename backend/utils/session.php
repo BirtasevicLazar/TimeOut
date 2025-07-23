@@ -7,22 +7,27 @@ ini_set('session.cookie_samesite', 'Strict'); // CSRF zaštita
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
-    
-    // Regeneriši session ID periodično (anti session hijacking)
-    if (!isset($_SESSION['last_regeneration'])) {
-        $_SESSION['last_regeneration'] = time();
-    } elseif (time() - $_SESSION['last_regeneration'] > 1800) { // 30 minuta
+}
+
+// Regeneriši session ID periodično (anti session hijacking)
+if (!isset($_SESSION['last_regeneration'])) {
+    $_SESSION['last_regeneration'] = time();
+} elseif (time() - $_SESSION['last_regeneration'] > 1800) { // 30 minuta
+    if (session_status() === PHP_SESSION_ACTIVE) {
         session_regenerate_id(true);
         $_SESSION['last_regeneration'] = time();
     }
-    
-    // Session timeout (2 sata)
-    if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 7200)) {
-        session_unset();
-        session_destroy();
-    }
-    $_SESSION['last_activity'] = time();
 }
+
+// Session timeout (4 sata umesto 2)
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 14400)) {
+    session_unset();
+    session_destroy();
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start(); // Pokreni novu sesiju
+    }
+}
+$_SESSION['last_activity'] = time();
 
 
 function isLoggedIn() {
@@ -38,13 +43,26 @@ function requireLogin() {
 }
 
 function login($user_id, $username) {
+    // Pokreni sesiju ako nije pokrenuta
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    
     $_SESSION['user_id'] = $user_id;
     $_SESSION['username'] = $username;
+    $_SESSION['last_activity'] = time();
+    $_SESSION['last_regeneration'] = time();
+    
     // Regeneriši session ID radi bezbednosti
     regenerateSession();
 }
 
 function logout() {
+    // Pokreni sesiju ako nije pokrenuta
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    
     // Obriši sve session varijable
     $_SESSION = array();
     
@@ -57,8 +75,10 @@ function logout() {
         );
     }
     
-    // Uništi sesiju
-    session_destroy();
+    // Uništi sesiju samo ako je aktivna
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_destroy();
+    }
 }
 
 function getCurrentUser() {
@@ -73,7 +93,9 @@ function getCurrentUser() {
 }
 
 function regenerateSession() {
-    // Regeneriši session ID radi bezbednosti
-    session_regenerate_id(true);
+    // Regeneriši session ID radi bezbednosti, ali samo ako je sesija aktivna
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_regenerate_id(true);
+    }
 }
 ?>
