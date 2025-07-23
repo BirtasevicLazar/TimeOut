@@ -170,7 +170,7 @@ const Navbar = () => {
             
             {/* Menu Panel */}
             <motion.div 
-              className="absolute top-0 right-0 h-full w-80 bg-white shadow-2xl"
+              className="absolute top-0 right-0 h-full w-70 bg-white shadow-2xl"
               variants={menuVariants}
               initial="hidden"
               animate="visible"
