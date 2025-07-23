@@ -8,13 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-// Debug info (može se ukloniti u produkciji)
-error_log("me.php called - Session status: " . session_status() . ", Session ID: " . session_id());
-error_log("Session data: " . print_r($_SESSION, true));
-
 // Proveri da li je korisnik ulogovan
 if (!isLoggedIn()) {
-    error_log("User not logged in - Session user_id not set");
     http_response_code(401);
     echo json_encode(['error' => 'Niste ulogovani']);
     exit;

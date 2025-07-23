@@ -148,8 +148,8 @@ const CategoriesManager = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Sticky Header - Full Width */}
-      <div className="sticky top-16 z-40 bg-white border-b border-gray-200 px-4 py-6">
+      {/* Header - Regular Flow */}
+      <div className="bg-white border-b border-gray-200 px-4 py-6">
         <div className="flex flex-col space-y-4">
           {/* Title and Add Button */}
           <div className="flex items-center justify-between">
