@@ -63,7 +63,7 @@ function uploadCategoryImage($file) {
         chmod($file_path, 0644);
         
         // Vrati relativnu putanju za bazu
-        $relative_path = '/TimeOut/backend/uploads/categories/' . $new_filename;
+        $relative_path = 'backend/uploads/categories/' . $new_filename;
         return ['success' => true, 'image_url' => $relative_path, 'filename' => $new_filename];
     } else {
         return ['success' => false, 'error' => 'Greška pri čuvanju fajla'];
@@ -150,7 +150,7 @@ function uploadDrinkImage($file) {
         chmod($file_path, 0644);
         
         // Vrati relativnu putanju za bazu
-        $relative_path = '/TimeOut/backend/uploads/drinks/' . $new_filename;
+        $relative_path = 'backend/uploads/drinks/' . $new_filename;
         return ['success' => true, 'image_url' => $relative_path, 'filename' => $new_filename];
     } else {
         return ['success' => false, 'error' => 'Greška pri čuvanju fajla'];

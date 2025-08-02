@@ -2,28 +2,16 @@
 
 header('Content-Type: application/json');
 
-// CORS konfiguracija - restriktivnija
+// CORS konfiguracija
 $allowed_origins = [
-    'http://localhost:4000',    // React dev server
-    'http://localhost:8080',    // Vue/Angular dev
-    'http://127.0.0.1:4000',
-    'http://127.0.0.1:5500',    // Live Server
-    'http://192.168.1.5:4000', // Local network IP - Frontend
-    'http://localhost:3000',    // Alternative React port
-    'https://yourdomain.com'    // Production domain
+    'https://timeout035.com',
+    'https://www.timeout035.com'
 ];
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
 if (in_array($origin, $allowed_origins)) {
     header("Access-Control-Allow-Origin: $origin");
-} else {
-    // Za development, možete dodati localhost i lokalne IP fallback
-    if (strpos($origin, 'localhost') !== false || 
-        strpos($origin, '127.0.0.1') !== false ||
-        preg_match('/^http:\/\/192\.168\.\d+\.\d+:\d+$/', $origin)) {
-        header("Access-Control-Allow-Origin: $origin");
-    }
 }
 
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");

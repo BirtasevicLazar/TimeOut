@@ -1,5 +1,5 @@
 // API Configuration
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8888/TimeOut/backend'
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://timeout035.com/backend'
 
 // Helper funkcije za različite tipove URL-ova
 export const getApiUrl = (endpoint) => `${API_BASE_URL}${endpoint}`
@@ -8,18 +8,33 @@ export const getImageUrl = (imagePath) => {
   if (!imagePath) return null
   // Ako je imagePath već pun URL, vrati ga
   if (imagePath.startsWith('http')) return imagePath
-  // Inače, dodaj base URL
-  return imagePath.startsWith('/') 
-    ? `http://192.168.1.5:8888${imagePath}` 
-    : `http://192.168.1.5:8888/${imagePath}`
+  
+  // Normalizuj putanje - ukloni leading slash ako postoji
+  const cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath
+  
+  return `https://timeout035.com/${cleanPath}`
 }
 
 export const getCategoryImageUrl = (imagePath) => {
   if (!imagePath) return null
-  return `${API_BASE_URL}/uploads/categories/${imagePath.split('/').pop()}`
+  
+  // Ako je imagePath samo ime fajla
+  if (!imagePath.includes('/')) {
+    return `https://timeout035.com/backend/uploads/categories/${imagePath}`
+  }
+  
+  // Ako je puna putanja
+  return getImageUrl(imagePath)
 }
 
 export const getDrinkImageUrl = (imagePath) => {
   if (!imagePath) return null
-  return `http://192.168.1.5:8888${imagePath}`
+  
+  // Ako je imagePath samo ime fajla
+  if (!imagePath.includes('/')) {
+    return `https://timeout035.com/backend/uploads/drinks/${imagePath}`
+  }
+  
+  // Ako je puna putanja
+  return getImageUrl(imagePath)
 }

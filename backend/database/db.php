@@ -25,10 +25,10 @@ function loadEnv($path) {
 loadEnv(__DIR__ . '/.env');
 
 // Database konfiguracija iz environment varijabli
-$host = $_ENV['DB_HOST'] ?? 'localhost';
-$dbname = $_ENV['DB_NAME'] ?? 'TimeOut';
-$username = $_ENV['DB_USERNAME'] ?? 'root';
-$password = $_ENV['DB_PASSWORD'] ?? '';
+$host = $_ENV['DB_HOST'];
+$dbname = $_ENV['DB_NAME'];
+$username = $_ENV['DB_USERNAME'];
+$password = $_ENV['DB_PASSWORD'];
 
 $conn = new mysqli($host, $username, $password, $dbname);
 

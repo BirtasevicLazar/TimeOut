@@ -62,7 +62,7 @@ const AdminApp = () => {
           <Route path="/" element={<AdminDashboard user={user} onLogout={handleLogout} />} />
           <Route path="/kategorije" element={<AdminDashboard user={user} onLogout={handleLogout}><CategoriesManager /></AdminDashboard>} />
           <Route path="/pica" element={<AdminDashboard user={user} onLogout={handleLogout}><DrinksManager /></AdminDashboard>} />
-          <Route path="*" element={<Navigate to="/admin" replace />} />
+          <Route path="*" element={<Navigate to="/admin/" replace />} />
         </Routes>
       ) : (
         <AdminLogin onLoginSuccess={handleLoginSuccess} />

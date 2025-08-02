@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getImageUrl } from '../utils/api'
+import { getImageUrl, getApiUrl } from '../utils/api'
 
 const CategoryCard = ({ category, onClick }) => {
   const hasImage = category.image_url && category.image_url.trim() !== ''
@@ -45,7 +45,7 @@ const CategoryList = ({ onCategorySelect }) => {
       setLoading(true)
       setError(null)
       
-      const response = await fetch('/api/categories/get.php', {
+      const response = await fetch(getApiUrl('/categories/get.php'), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
