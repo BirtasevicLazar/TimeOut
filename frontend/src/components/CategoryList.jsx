@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getImageUrl, getApiUrl } from '../utils/api'
+import { getCategoriesCache, setCategoriesCache, isCacheValid, cacheKeys } from '../utils/cache'
+import { useCacheInvalidation } from '../hooks/useCacheInvalidation'
 
 const CategoryCard = ({ category, onClick }) => {
   const hasImage = category.image_url && category.image_url.trim() !== ''
@@ -35,9 +37,24 @@ const CategoryList = ({ onCategorySelect }) => {
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const { invalidateCategories } = useCacheInvalidation()
 
   useEffect(() => {
     fetchCategories()
+  }, [])
+
+  // Slušaj za admin promene
+  useEffect(() => {
+    const handleAdminChanges = () => {
+      // Refetch kategorije kada admin napravi promene
+      fetchCategories()
+    }
+
+    window.addEventListener('admin_categories_changed', handleAdminChanges)
+    
+    return () => {
+      window.removeEventListener('admin_categories_changed', handleAdminChanges)
+    }
   }, [])
 
   const fetchCategories = async () => {
@@ -45,6 +62,15 @@ const CategoryList = ({ onCategorySelect }) => {
       setLoading(true)
       setError(null)
       
+      // Prvo pokušaj da učitaš iz cache-a
+      const cachedCategories = getCategoriesCache()
+      if (cachedCategories && isCacheValid(cacheKeys.CATEGORIES)) {
+        setCategories(cachedCategories)
+        setLoading(false)
+        return
+      }
+      
+      // Ako nema cache-a ili je expired, učitaj sa servera
       const response = await fetch(getApiUrl('/categories/get.php'), {
         method: 'GET',
         headers: {
@@ -62,7 +88,12 @@ const CategoryList = ({ onCategorySelect }) => {
         throw new Error(data.error)
       }
       
-      setCategories(data.categories || [])
+      const categories = data.categories || []
+      setCategories(categories)
+      
+      // Sačuvaj u cache za buduće korišćenje
+      setCategoriesCache(categories)
+      
     } catch (err) {
       setError(err.message)
     } finally {

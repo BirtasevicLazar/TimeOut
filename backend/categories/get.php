@@ -41,7 +41,7 @@ try {
         ]);
     } else {
         // Vrati sve kategorije
-        $stmt = $conn->prepare("SELECT id, name, image_url FROM categories ORDER BY name ASC");
+        $stmt = $conn->prepare("SELECT id, name, image_url FROM categories ORDER BY id ASC");
         $stmt->execute();
         $result = $stmt->get_result();
         

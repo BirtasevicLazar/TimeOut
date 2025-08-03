@@ -1,4 +1,5 @@
 import { API_BASE_URL, getApiUrl } from '../../utils/api'
+import { notifyAdminChanges } from '../../hooks/useCacheInvalidation'
 
 // Dobij sve kategorije
 export const getCategories = async () => {
@@ -59,6 +60,8 @@ export const createCategory = async (name, image = null) => {
     const data = await response.json()
 
     if (response.ok) {
+      // Invaliduj cache kada se kreira nova kategorija
+      notifyAdminChanges()
       return { success: true, category: data.category, message: data.message }
     } else {
       return { success: false, error: data.error }
@@ -89,6 +92,8 @@ export const updateCategory = async (id, name, image = null) => {
     const data = await response.json()
 
     if (response.ok) {
+      // Invaliduj cache kada se ažurira kategorija
+      notifyAdminChanges()
       return { success: true, category: data.category, message: data.message }
     } else {
       return { success: false, error: data.error }
@@ -109,6 +114,8 @@ export const deleteCategory = async (id) => {
     const data = await response.json()
 
     if (response.ok) {
+      // Invaliduj cache kada se obriše kategorija
+      notifyAdminChanges()
       return { success: true, message: data.message }
     } else {
       return { success: false, error: data.error, drinks_count: data.drinks_count }

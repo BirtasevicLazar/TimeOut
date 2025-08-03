@@ -10,7 +10,7 @@ if (isset($_GET['password'])) {
     echo "<p><strong>Password:</strong> " . htmlspecialchars($password) . "</p>";
     echo "<p><strong>Hash:</strong> " . $hash . "</p>";
     echo "<p><strong>SQL Query:</strong></p>";
-    echo "<code>INSERT INTO users (username, password) VALUES ('admin', '$hash');</code>";
+    echo "<code>INSERT INTO users (username, password) VALUES ('sukacev12345', '$hash');</code>";
 } else {
     echo "<h3>Password Hash Generator</h3>";
     echo "<form method='GET'>";
