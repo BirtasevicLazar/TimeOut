@@ -58,7 +58,6 @@ const AdminNavbar = ({ user, onLogout }) => {
       action: () => {
         closeMenu()
         navigate('/admin/kategorije')
-        // Scroll to top after navigation
         setTimeout(() => {
           window.scrollTo({
             top: 0,
@@ -68,17 +67,16 @@ const AdminNavbar = ({ user, onLogout }) => {
       }
     },
     { 
-      name: 'Pića', 
-      path: '/admin/pica',
+      name: 'Kategorije za žurke', 
+      path: '/admin/kategorije-zurke',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
         </svg>
       ),
       action: () => {
         closeMenu()
-        navigate('/admin/pica')
-        // Scroll to top after navigation
+        navigate('/admin/kategorije-zurke')
         setTimeout(() => {
           window.scrollTo({
             top: 0,

@@ -23,6 +23,7 @@ if (!isset($_POST['_method']) || $_POST['_method'] !== 'PUT') {
 // Uzmi podatke iz form-data
 $category_id = isset($_POST['id']) ? filter_var($_POST['id'], FILTER_VALIDATE_INT) : null;
 $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+$is_party = isset($_POST['is_party']) ? filter_var($_POST['is_party'], FILTER_VALIDATE_BOOLEAN) : false;
 
 // Validacija ID-ja
 if (!$category_id || $category_id <= 0) {
@@ -48,7 +49,7 @@ if (strlen($name) > 100) {
 try {
 
     // Prvo uzmi trenutne podatke o kategoriji
-    $stmt = $conn->prepare("SELECT id, image_url FROM categories WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id, image_url, is_party FROM categories WHERE id = ?");
     $stmt->bind_param("i", $category_id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -91,8 +92,8 @@ try {
     }
     
     // Ažuriraj kategoriju
-    $stmt = $conn->prepare("UPDATE categories SET name = ?, image_url = ? WHERE id = ?");
-    $stmt->bind_param("ssi", $name, $image_url, $category_id);
+    $stmt = $conn->prepare("UPDATE categories SET name = ?, image_url = ?, is_party = ? WHERE id = ?");
+    $stmt->bind_param("ssii", $name, $image_url, $is_party, $category_id);
     
     if ($stmt->execute()) {
         // Ako je slika uspešno ažurirana i bila je nova slika, obriši staru
@@ -106,7 +107,8 @@ try {
             'category' => [
                 'id' => $category_id,
                 'name' => $name,
-                'image_url' => $image_url
+                'image_url' => $image_url,
+                'is_party' => $is_party
             ]
         ]);
     } else {

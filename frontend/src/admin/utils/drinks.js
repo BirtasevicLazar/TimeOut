@@ -25,6 +25,26 @@ export const getDrinks = async (categoryId = null) => {
   }
 }
 
+// Dobij pića po kategoriji
+export const getDrinksByCategory = async (categoryId) => {
+  try {
+    const response = await fetch(getApiUrl(`/drinks/get.php?category_id=${categoryId}`), {
+      method: 'GET',
+      credentials: 'include'
+    })
+
+    const data = await response.json()
+
+    if (response.ok) {
+      return { success: true, drinks: data.drinks, count: data.count }
+    } else {
+      return { success: false, error: data.error }
+    }
+  } catch (error) {
+    return { success: false, error: 'Greška pri dobijanju pića' }
+  }
+}
+
 // Dobij jedno piće po ID-u
 export const getDrink = async (id) => {
   try {

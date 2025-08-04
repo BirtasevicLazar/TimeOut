@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Uzmi podatke iz form-data
 $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+$is_party = isset($_POST['is_party']) ? filter_var($_POST['is_party'], FILTER_VALIDATE_BOOLEAN) : false;
 
 // Validacija obaveznih polja
 if (empty($name)) {
@@ -63,8 +64,8 @@ try {
     }
     
     // Kreiraj novu kategoriju
-    $stmt = $conn->prepare("INSERT INTO categories (name, image_url) VALUES (?, ?)");
-    $stmt->bind_param("ss", $name, $image_url);
+    $stmt = $conn->prepare("INSERT INTO categories (name, image_url, is_party) VALUES (?, ?, ?)");
+    $stmt->bind_param("ssi", $name, $image_url, $is_party);
     
     if ($stmt->execute()) {
         $category_id = $conn->insert_id;
@@ -74,7 +75,8 @@ try {
             'category' => [
                 'id' => $category_id,
                 'name' => $name,
-                'image_url' => $image_url
+                'image_url' => $image_url,
+                'is_party' => $is_party
             ]
         ]);
     } else {

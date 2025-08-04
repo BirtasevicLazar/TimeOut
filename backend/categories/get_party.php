@@ -1,10 +1,8 @@
 <?php
 require_once '../database/cors.php';
 require_once '../database/db.php';
-// require_once '../utils/session.php'; // Nije potrebno za javne GET operacije
 
 // GET operacije ne zahtevaju autentifikaciju - svi mogu da vide kategorije
-// requireLogin(); // Uklonjen zahtev za login
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
@@ -13,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 try {
-    // Ako je prosleđen ID, vrati specifičnu kategoriju
+    // Ako je prosleđen ID, vrati specifičnu kategoriju za žurke
     if (isset($_GET['id'])) {
         $category_id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
         
@@ -23,14 +21,14 @@ try {
             exit;
         }
         
-        $stmt = $conn->prepare("SELECT id, name, image_url, is_party FROM categories WHERE id = ?");
+        $stmt = $conn->prepare("SELECT id, name, image_url, is_party FROM categories WHERE id = ? AND is_party = TRUE");
         $stmt->bind_param("i", $category_id);
         $stmt->execute();
         $result = $stmt->get_result();
         
         if ($result->num_rows === 0) {
             http_response_code(404);
-            echo json_encode(['error' => 'Kategorija nije pronađena']);
+            echo json_encode(['error' => 'Kategorija za žurke nije pronađena']);
             exit;
         }
         
@@ -40,8 +38,8 @@ try {
             'category' => $category
         ]);
     } else {
-        // Vrati sve kategorije koje nisu za žurke (is_party = FALSE ili NULL)
-        $stmt = $conn->prepare("SELECT id, name, image_url, is_party FROM categories WHERE is_party = FALSE OR is_party IS NULL ORDER BY id ASC");
+        // Vrati sve kategorije za žurke (is_party = TRUE)
+        $stmt = $conn->prepare("SELECT id, name, image_url, is_party FROM categories WHERE is_party = TRUE ORDER BY id ASC");
         $stmt->execute();
         $result = $stmt->get_result();
         

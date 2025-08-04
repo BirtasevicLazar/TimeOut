@@ -1,6 +1,6 @@
 import { getCategoryImageUrl } from '../../utils/api'
 
-const CategoryCard = ({ category, onEdit, onDelete }) => {
+const CategoryCard = ({ category, onEdit, onDelete, onViewDrinks }) => {
   const imageUrl = category.image_url 
     ? getCategoryImageUrl(category.image_url)
     : null
@@ -8,7 +8,7 @@ const CategoryCard = ({ category, onEdit, onDelete }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200 hover:border-gray-200">
       {/* Image */}
-      <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 relative group">
+      <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 relative">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -35,13 +35,31 @@ const CategoryCard = ({ category, onEdit, onDelete }) => {
             <p className="text-sm text-gray-500 font-medium">Nema slike</p>
           </div>
         </div>
+      </div>
 
-        {/* Action buttons overlay */}
-        <div className="absolute top-3 right-3 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      {/* Content */}
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold text-gray-900 text-lg leading-tight truncate flex-1 mr-3" title={category.name}>
+            {category.name}
+          </h3>
+        </div>
+
+        {/* Action buttons */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => onViewDrinks && onViewDrinks(category)}
+            className="flex-1 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18z" />
+            </svg>
+            Pića
+          </button>
           <button
             onClick={() => onEdit(category)}
-            className="w-9 h-9 bg-white text-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-50 transition-colors duration-200 shadow-md backdrop-blur-sm"
-            title="Edituj kategoriju"
+            className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+            title="Edituj"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -49,43 +67,13 @@ const CategoryCard = ({ category, onEdit, onDelete }) => {
           </button>
           <button
             onClick={() => onDelete(category)}
-            className="w-9 h-9 bg-white text-red-600 rounded-lg flex items-center justify-center hover:bg-red-50 transition-colors duration-200 shadow-md backdrop-blur-sm"
-            title="Obriši kategoriju"
+            className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200"
+            title="Obriši"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
           </button>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="p-4">
-        <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-gray-900 text-base leading-tight truncate flex-1 mr-3" title={category.name}>
-            {category.name}
-          </h3>
-          
-          <div className="flex items-center space-x-2 flex-shrink-0">
-            <button
-              onClick={() => onEdit(category)}
-              className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors duration-200"
-              title="Edituj"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-            </button>
-            <button
-              onClick={() => onDelete(category)}
-              className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200"
-              title="Obriši"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
     </div>

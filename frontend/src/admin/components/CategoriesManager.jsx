@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getCategories, createCategory, updateCategory, deleteCategory, getCategoryDrinksCount } from '../utils/categories'
 import CategoryForm from './CategoryForm'
 import CategoryCard from './CategoryCard'
 import Modal from './Modal'
 
 const CategoriesManager = () => {
+  const navigate = useNavigate()
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -49,7 +51,7 @@ const CategoriesManager = () => {
   }
 
   const handleCreateCategory = async (name, image) => {
-    const result = await createCategory(name, image)
+    const result = await createCategory(name, image, false) // is_party = false
     
     if (result.success) {
       setSuccess('Kategorija je uspešno kreirana!')
@@ -75,7 +77,7 @@ const CategoriesManager = () => {
   const handleUpdateCategory = async (name, image) => {
     if (!selectedCategory) return
     
-    const result = await updateCategory(selectedCategory.id, name, image)
+    const result = await updateCategory(selectedCategory.id, name, image, false) // is_party = false
     
     if (result.success) {
       setSuccess('Kategorija je uspešno ažurirana!')
@@ -97,6 +99,10 @@ const CategoriesManager = () => {
     } else {
       setError(result.error)
     }
+  }
+
+  const handleViewDrinks = (category) => {
+    navigate(`/admin/kategorije/${category.id}/pica`)
   }
 
   const handleDeleteCategory = async () => {
@@ -239,6 +245,7 @@ const CategoriesManager = () => {
                 category={category}
                 onEdit={() => openEditModal(category)}
                 onDelete={() => openDeleteModal(category)}
+                onViewDrinks={handleViewDrinks}
               />
             ))}
           </div>

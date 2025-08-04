@@ -3,6 +3,8 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import AdminLogin from '../components/AdminLogin'
 import AdminDashboard from '../components/AdminDashboard'
 import CategoriesManager from '../components/CategoriesManager'
+import PartyCategoriesManager from '../components/PartyCategoriesManager'
+import CategoryDrinksManager from '../components/CategoryDrinksManager'
 import DrinksManager from '../components/DrinksManager'
 import ScrollToTop from '../../components/ScrollToTop'
 import useScrollToTop from '../../hooks/useScrollToTop'
@@ -61,6 +63,9 @@ const AdminApp = () => {
         <Routes>
           <Route path="/" element={<AdminDashboard user={user} onLogout={handleLogout} />} />
           <Route path="/kategorije" element={<AdminDashboard user={user} onLogout={handleLogout}><CategoriesManager /></AdminDashboard>} />
+          <Route path="/kategorije-zurke" element={<AdminDashboard user={user} onLogout={handleLogout}><PartyCategoriesManager /></AdminDashboard>} />
+          <Route path="/kategorije/:categoryId/pica" element={<AdminDashboard user={user} onLogout={handleLogout}><CategoryDrinksManager /></AdminDashboard>} />
+          <Route path="/kategorije-zurke/:categoryId/pica" element={<AdminDashboard user={user} onLogout={handleLogout}><CategoryDrinksManager /></AdminDashboard>} />
           <Route path="/pica" element={<AdminDashboard user={user} onLogout={handleLogout}><DrinksManager /></AdminDashboard>} />
           <Route path="*" element={<Navigate to="/admin/" replace />} />
         </Routes>

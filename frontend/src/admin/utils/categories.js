@@ -21,6 +21,26 @@ export const getCategories = async () => {
   }
 }
 
+// Dobij sve kategorije za žurke
+export const getPartyCategories = async () => {
+  try {
+    const response = await fetch(getApiUrl('/categories/get_party.php'), {
+      method: 'GET',
+      credentials: 'include'
+    })
+
+    const data = await response.json()
+
+    if (response.ok) {
+      return { success: true, categories: data.categories, count: data.count }
+    } else {
+      return { success: false, error: data.error }
+    }
+  } catch (error) {
+    return { success: false, error: 'Greška pri dobijanju kategorija za žurke' }
+  }
+}
+
 // Dobij jednu kategoriju po ID-u
 export const getCategory = async (id) => {
   try {
@@ -42,10 +62,11 @@ export const getCategory = async (id) => {
 }
 
 // Kreiraj novu kategoriju
-export const createCategory = async (name, image = null) => {
+export const createCategory = async (name, image = null, isParty = false) => {
   try {
     const formData = new FormData()
     formData.append('name', name)
+    formData.append('is_party', isParty)
     
     if (image) {
       formData.append('image', image)
@@ -72,12 +93,13 @@ export const createCategory = async (name, image = null) => {
 }
 
 // Ažuriraj kategoriju
-export const updateCategory = async (id, name, image = null) => {
+export const updateCategory = async (id, name, image = null, isParty = false) => {
   try {
     const formData = new FormData()
     formData.append('_method', 'PUT')
     formData.append('id', id)
     formData.append('name', name)
+    formData.append('is_party', isParty)
     
     if (image) {
       formData.append('image', image)
