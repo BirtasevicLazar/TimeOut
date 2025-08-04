@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom'
 
 const MotionLink = motion.create(Link)
 
-const Navbar = () => {
+const PartyNavbar = () => {
   const [scrolled, setScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
@@ -35,11 +35,11 @@ const Navbar = () => {
   }
 
   const handleLogoClick = () => {
-    // Za obični navbar uvek idi na početnu stranicu
-    if (location.pathname === '/') {
+    // Za party navbar uvek idi na /party
+    if (location.pathname === '/party') {
       scrollToTop()
     } else {
-      window.location.href = '/'
+      window.location.href = '/party'
     }
     closeMenu()
   }
@@ -63,7 +63,7 @@ const Navbar = () => {
   }, [isMenuOpen])
 
   const menuItems = [
-    { name: 'Kontakt', href: '/contact', internal: true },
+    { name: 'Kontakt', href: '/contact/party', internal: true },
     { name: 'Instagram', href: 'https://www.instagram.com/timeoutloungebar/', external: true },
   ]
 
@@ -276,4 +276,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default PartyNavbar

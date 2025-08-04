@@ -1,6 +1,6 @@
 import ContactHero from './ContactHero'
 
-const Contact = () => {
+const Contact = ({ isPartyContext = false }) => {
   const contactInfo = [
     {
       icon: (
@@ -54,7 +54,7 @@ const Contact = () => {
   return (
     <>
       <ContactHero />
-      <div id="contact" className="min-h-screen bg-gray-50 pt-2 pb-16">
+      <div id="contact" className="min-h-screen bg-gray-50 pt-2 pb-8">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             {/* Contact Grid */}

@@ -104,7 +104,7 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-4">
+      <div className="min-h-screen bg-gray-50 py-4 pb-8">
         <div className="container mx-auto px-4">
           {/* Header with back button */}
           <div className="flex items-center mb-8">
@@ -150,7 +150,7 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 py-4">
+      <div className="min-h-screen bg-gray-50 py-4 pb-8">
         <div className="container mx-auto px-4">
           {/* Header with back button */}
           <div className="flex items-center mb-8">
@@ -183,7 +183,7 @@ const DrinksList = ({ categoryId, categoryName, onBack }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-4">
+    <div className="min-h-screen bg-gray-50 py-4 pb-8">
       <div className="container mx-auto px-4">
         {/* Header with back button */}
         <div className="flex items-center mb-8">

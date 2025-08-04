@@ -109,7 +109,7 @@ const CategoryList = ({ onCategorySelect }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-4">
+      <div className="min-h-screen bg-gray-50 py-4 pb-8">
         <div className="container mx-auto px-2">
           <div className="space-y-4">
             {[1, 2, 3].map((item) => (
@@ -123,7 +123,7 @@ const CategoryList = ({ onCategorySelect }) => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 py-4">
+      <div className="min-h-screen bg-gray-50 py-4 pb-8">
         <div className="container mx-auto px-2">
           <div className="text-center">
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
@@ -143,7 +143,7 @@ const CategoryList = ({ onCategorySelect }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-8">
       <div className="container mx-auto px-2">
         <h2 className="text-3xl font-bold text-center mb-4 text-gray-800">
           Naš meni

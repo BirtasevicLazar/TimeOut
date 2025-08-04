@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { getPartyCategories } from '../admin/utils/categories'
 import { getImageUrl, getApiUrl } from '../utils/api'
 import { getPartyCategoriesCache, setPartyCategoriesCache, isCacheValid, cacheKeys } from '../utils/cache'
-import Navbar from './Navbar'
+import PartyNavbar from './PartyNavbar'
 import DrinksList from './DrinksList'
 import { useCacheInvalidation } from '../hooks/useCacheInvalidation'
 
@@ -65,7 +65,7 @@ const Hero = () => {
             <span className="block text-orange-400">TimeOut</span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-gray-200 leading-relaxed">
-            Vaš digitalni meni za nezaboravne trenutke
+            Tvoje omiljeno mesto u gradu
           </p>
           
           {/* Scroll indicator */}
@@ -161,7 +161,7 @@ const PartyCategories = () => {
           onBack={handleBackToCategories}
         />
       ) : (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 pb-8">
           <div className="container mx-auto px-2">
             <h2 className="text-3xl font-bold text-center mb-4 text-gray-800">
               Naš meni
@@ -196,7 +196,7 @@ const PartyCategories = () => {
   if (loading) {
     return (
       <>
-        <Navbar />
+        <PartyNavbar />
         <PartyContent />
       </>
     )
@@ -205,9 +205,9 @@ const PartyCategories = () => {
   if (error) {
     return (
       <>
-        <Navbar />
+        <PartyNavbar />
         <Hero />
-        <div className="min-h-screen bg-gray-50 py-4">
+        <div className="min-h-screen bg-gray-50 py-4 pb-8">
           <div className="container mx-auto px-2">
             <div className="text-center">
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
@@ -229,7 +229,7 @@ const PartyCategories = () => {
 
   return (
     <>
-      <Navbar />
+      <PartyNavbar />
       <PartyContent />
     </>
   )

@@ -27,7 +27,7 @@ const Hero = () => {
             <span className="block text-orange-400">TimeOut</span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-gray-200 leading-relaxed">
-            Vaš digitalni meni za nezaboravne trenutke
+            Tvoje omiljeno mesto u gradu
           </p>
           
           {/* Scroll indicator */}
