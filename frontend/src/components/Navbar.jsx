@@ -34,16 +34,6 @@ const Navbar = () => {
     })
   }
 
-  const handleLogoClick = () => {
-    // Za obični navbar uvek idi na početnu stranicu
-    if (location.pathname === '/') {
-      scrollToTop()
-    } else {
-      window.location.href = '/'
-    }
-    closeMenu()
-  }
-
   const handleInternalLinkClick = () => {
     closeMenu()
     scrollToTop()
@@ -63,6 +53,7 @@ const Navbar = () => {
   }, [isMenuOpen])
 
   const menuItems = [
+    { name: 'Početna', href: '/', internal: true },
     { name: 'Kontakt', href: '/contact', internal: true },
     { name: 'Instagram', href: 'https://www.instagram.com/timeoutloungebar/', external: true },
   ]
@@ -116,8 +107,7 @@ const Navbar = () => {
             {/* Logo */}
             <div className="flex items-center space-x-2">
               <div
-                onClick={handleLogoClick}
-                className={`text-2xl font-bold transition-colors duration-300 cursor-pointer hover:opacity-80 ${
+                className={`text-2xl font-bold transition-colors duration-300 ${
                   scrolled ? 'text-orange-600' : 'text-white'
                 }`}
               >
@@ -200,7 +190,9 @@ const Navbar = () => {
             >
               {/* Menu Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                <h2 className="text-xl font-bold text-gray-800">Meni</h2>
+                <div className="text-xl font-bold text-orange-600">
+                  TimeOut
+                </div>
                 <button 
                   onClick={closeMenu}
                   className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
@@ -260,8 +252,7 @@ const Navbar = () => {
               >
                 <div className="text-center">
                   <div 
-                    onClick={handleLogoClick}
-                    className="text-2xl font-bold text-orange-600 mb-2 cursor-pointer hover:opacity-80 transition-opacity"
+                    className="text-2xl font-bold text-orange-600 mb-2"
                   >
                     TimeOut
                   </div>
