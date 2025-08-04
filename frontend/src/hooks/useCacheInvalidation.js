@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { clearCategoriesCache } from '../utils/cache'
+import { clearCategoriesCache, clearPartyCategoriesCache } from '../utils/cache'
 
 // Hook za čišćenje cache-a kada se admin promeni kategorije
 export const useCacheInvalidation = () => {
@@ -7,6 +7,7 @@ export const useCacheInvalidation = () => {
   // Funkcija za invalidiranje kategorija cache-a
   const invalidateCategories = () => {
     clearCategoriesCache()
+    clearPartyCategoriesCache()
   }
 
   // Postavi event listener za storage event (ako je admin u drugom tab-u)
@@ -39,6 +40,7 @@ export const notifyAdminChanges = () => {
     
     // Takođe očisti cache direktno
     clearCategoriesCache()
+    clearPartyCategoriesCache()
     
     // Triggeruj custom event za trenutnu stranicu
     window.dispatchEvent(new CustomEvent('admin_categories_changed'))

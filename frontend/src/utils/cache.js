@@ -2,7 +2,8 @@
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minuta u milisekundama
 
 export const cacheKeys = {
-  CATEGORIES: 'categories_cache'
+  CATEGORIES: 'categories_cache',
+  PARTY_CATEGORIES: 'party_categories_cache'
 };
 
 // Generička funkcija za čuvanje u cache
@@ -72,6 +73,19 @@ export const getCategoriesCache = () => {
 
 export const clearCategoriesCache = () => {
   clearCache(cacheKeys.CATEGORIES);
+};
+
+// Specifične funkcije za party kategorije
+export const setPartyCategoriesCache = (categories) => {
+  setCache(cacheKeys.PARTY_CATEGORIES, categories);
+};
+
+export const getPartyCategoriesCache = () => {
+  return getCache(cacheKeys.PARTY_CATEGORIES);
+};
+
+export const clearPartyCategoriesCache = () => {
+  clearCache(cacheKeys.PARTY_CATEGORIES);
 };
 
 // Proveri da li je cache još uvek valjan

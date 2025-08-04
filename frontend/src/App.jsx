@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import CategoryList from './components/CategoryList'
 import DrinksList from './components/DrinksList'
+import PartyCategories from './components/PartyCategories'
 import Contact from './components/Contact'
 import AdminApp from './admin/pages/AdminApp'
 import ScrollToTop from './components/ScrollToTop'
@@ -44,6 +45,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/party" element={<PartyCategories />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </>

@@ -53,7 +53,6 @@ const Navbar = () => {
   }, [isMenuOpen])
 
   const menuItems = [
-    { name: 'Početna', href: '/', internal: true },
     { name: 'Kontakt', href: '/contact', internal: true },
     { name: 'Instagram', href: 'https://www.instagram.com/timeoutloungebar/', external: true },
   ]
@@ -106,14 +105,13 @@ const Navbar = () => {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center space-x-2">
-              <Link
-                to="/"
+              <div
                 className={`text-2xl font-bold transition-colors duration-300 ${
                   scrolled ? 'text-orange-600' : 'text-white'
                 }`}
               >
                 TimeOut
-              </Link>
+              </div>
             </div>
 
             {/* Desktop Menu - Hidden on mobile */}
