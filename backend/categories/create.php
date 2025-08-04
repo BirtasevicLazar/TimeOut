@@ -47,9 +47,9 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE)
 
 try {
    
-    // Proveri da li već postoji kategorija sa istim imenom
-    $stmt = $conn->prepare("SELECT id FROM categories WHERE name = ?");
-    $stmt->bind_param("s", $name);
+    // Proveri da li već postoji kategorija sa istim imenom i istim is_party statusom
+    $stmt = $conn->prepare("SELECT id FROM categories WHERE name = ? AND is_party = ?");
+    $stmt->bind_param("si", $name, $is_party);
     $stmt->execute();
     $result = $stmt->get_result();
     
@@ -59,7 +59,8 @@ try {
             deleteCategoryImage($image_url);
         }
         http_response_code(409);
-        echo json_encode(['error' => 'Kategorija sa tim imenom već postoji']);
+        $context = $is_party ? 'za žurke' : 'za obični meni';
+        echo json_encode(['error' => "Kategorija sa tim imenom već postoji $context"]);
         exit;
     }
     

@@ -2,7 +2,6 @@
 require_once '../database/cors.php';
 require_once '../database/db.php';
 require_once '../utils/session.php';
-require_once '../utils/image_upload.php';
 
 // Proveri da li je korisnik ulogovan
 requireLogin();
@@ -37,7 +36,7 @@ if (!$drink_id || $drink_id <= 0) {
 try {
     // Prvo proveri da li piće postoji i uzmi podatke za odgovor
     $stmt = $conn->prepare("
-        SELECT d.id, d.name, d.description, d.price, d.image_url, d.category_id, c.name as category_name
+        SELECT d.id, d.name, d.description, d.price, d.category_id, c.name as category_name
         FROM drinks d 
         LEFT JOIN categories c ON d.category_id = c.id 
         WHERE d.id = ?
@@ -53,7 +52,6 @@ try {
     }
     
     $drink = $result->fetch_assoc();
-    $image_url = $drink['image_url'];
     
     // Formatuj cenu za odgovor
     $drink['price'] = $drink['price'] ? floatval($drink['price']) : null;
@@ -63,11 +61,6 @@ try {
     $stmt->bind_param("i", $drink_id);
     
     if ($stmt->execute()) {
-        // Obriši sliku sa servera ako postoji
-        if ($image_url) {
-            deleteDrinkImage($image_url);
-        }
-        
         echo json_encode([
             'success' => true,
             'message' => 'Piće je uspešno obrisano',

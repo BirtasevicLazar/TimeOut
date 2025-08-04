@@ -66,7 +66,7 @@ export const getDrink = async (id) => {
 }
 
 // Kreiraj novo piće
-export const createDrink = async (name, description = '', price = null, categoryId = null, image = null) => {
+export const createDrink = async (name, description = '', price = null, categoryId = null) => {
   try {
     const formData = new FormData()
     formData.append('name', name)
@@ -78,10 +78,6 @@ export const createDrink = async (name, description = '', price = null, category
     
     if (categoryId !== null && categoryId !== '') {
       formData.append('category_id', categoryId)
-    }
-    
-    if (image) {
-      formData.append('image', image)
     }
 
     const response = await fetch(getApiUrl('/drinks/create.php'), {
@@ -103,7 +99,7 @@ export const createDrink = async (name, description = '', price = null, category
 }
 
 // Ažuriraj piće
-export const updateDrink = async (id, name, description = '', price = null, categoryId = null, image = null) => {
+export const updateDrink = async (id, name, description = '', price = null, categoryId = null) => {
   try {
     const formData = new FormData()
     formData.append('_method', 'PUT')
@@ -117,10 +113,6 @@ export const updateDrink = async (id, name, description = '', price = null, cate
     
     if (categoryId !== null && categoryId !== '') {
       formData.append('category_id', categoryId)
-    }
-    
-    if (image) {
-      formData.append('image', image)
     }
 
     const response = await fetch(getApiUrl('/drinks/update.php'), {

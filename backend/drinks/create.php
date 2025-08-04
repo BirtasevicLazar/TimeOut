@@ -2,7 +2,6 @@
 require_once '../database/cors.php';
 require_once '../database/db.php';
 require_once '../utils/session.php';
-require_once '../utils/image_upload.php';
 
 // Proveri da li je korisnik ulogovan
 requireLogin();
@@ -69,47 +68,17 @@ if ($category_id !== null && $category_id !== '') {
     $category_id = null;
 }
 
-// Upload slike (opcionalno)
-$image_url = null;
-if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
-    $upload_result = uploadDrinkImage($_FILES['image']);
-    
-    if (!$upload_result['success']) {
-        http_response_code(400);
-        echo json_encode(['error' => $upload_result['error']]);
-        exit;
-    }
-    
-    $image_url = $upload_result['image_url'];
-}
-
 try {
-    // Proveri da li već postoji piće sa istim imenom
-    $stmt = $conn->prepare("SELECT id FROM drinks WHERE name = ?");
-    $stmt->bind_param("s", $name);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows > 0) {
-        // Obriši upload-ovanu sliku ako postoji greška
-        if ($image_url) {
-            deleteDrinkImage($image_url);
-        }
-        http_response_code(409);
-        echo json_encode(['error' => 'Piće sa tim imenom već postoji']);
-        exit;
-    }
-    
     // Kreiraj novo piće
-    $stmt = $conn->prepare("INSERT INTO drinks (name, description, price, image_url, category_id) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssdsi", $name, $description, $price, $image_url, $category_id);
+    $stmt = $conn->prepare("INSERT INTO drinks (name, description, price, category_id) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssdi", $name, $description, $price, $category_id);
     
     if ($stmt->execute()) {
         $drink_id = $conn->insert_id;
         
         // Vrati kreirano piće sa podacima o kategoriji
         $stmt = $conn->prepare("
-            SELECT d.id, d.name, d.description, d.price, d.image_url, d.category_id, c.name as category_name
+            SELECT d.id, d.name, d.description, d.price, d.category_id, c.name as category_name
             FROM drinks d 
             LEFT JOIN categories c ON d.category_id = c.id 
             WHERE d.id = ?
@@ -128,18 +97,10 @@ try {
             'drink' => $drink
         ]);
     } else {
-        // Obriši upload-ovanu sliku ako se kreiranje nije uspešno
-        if ($image_url) {
-            deleteDrinkImage($image_url);
-        }
         http_response_code(500);
         echo json_encode(['error' => 'Greška pri kreiranju pića']);
     }
 } catch (Exception $e) {
-    // Obriši upload-ovanu sliku ako ima greške
-    if ($image_url) {
-        deleteDrinkImage($image_url);
-    }
     http_response_code(500);
     echo json_encode(['error' => 'Greška na serveru: ' . $e->getMessage()]);
 }

@@ -26,15 +26,3 @@ export const getCategoryImageUrl = (imagePath) => {
   // Ako je puna putanja
   return getImageUrl(imagePath)
 }
-
-export const getDrinkImageUrl = (imagePath) => {
-  if (!imagePath) return null
-  
-  // Ako je imagePath samo ime fajla
-  if (!imagePath.includes('/')) {
-    return `https://timeout035.com/backend/uploads/drinks/${imagePath}`
-  }
-  
-  // Ako je puna putanja
-  return getImageUrl(imagePath)
-}

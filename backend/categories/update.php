@@ -63,15 +63,16 @@ try {
     $current_category = $result->fetch_assoc();
     $old_image_url = $current_category['image_url'];
     
-    // Proveri da li već postoji kategorija sa istim imenom (osim trenutne)
-    $stmt = $conn->prepare("SELECT id FROM categories WHERE name = ? AND id != ?");
-    $stmt->bind_param("si", $name, $category_id);
+    // Proveri da li već postoji kategorija sa istim imenom i istim is_party statusom (osim trenutne)
+    $stmt = $conn->prepare("SELECT id FROM categories WHERE name = ? AND is_party = ? AND id != ?");
+    $stmt->bind_param("sii", $name, $current_category['is_party'], $category_id);
     $stmt->execute();
     $result = $stmt->get_result();
     
     if ($result->num_rows > 0) {
         http_response_code(409);
-        echo json_encode(['error' => 'Kategorija sa tim imenom već postoji']);
+        $context = $current_category['is_party'] ? 'za žurke' : 'za obični meni';
+        echo json_encode(['error' => "Kategorija sa tim imenom već postoji $context"]);
         exit;
     }
     

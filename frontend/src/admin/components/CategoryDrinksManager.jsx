@@ -68,10 +68,10 @@ const CategoryDrinksManager = () => {
     setLoading(false)
   }
 
-  const handleAddDrink = async (name, description, price, image) => {
+  const handleAddDrink = async (drinkData) => {
     clearMessages()
     
-    const result = await createDrink(name, description, price, categoryId, image)
+    const result = await createDrink(drinkData.name, drinkData.description, drinkData.price, categoryId)
     
     if (result.success) {
       setSuccess(result.message)
@@ -82,10 +82,10 @@ const CategoryDrinksManager = () => {
     }
   }
 
-  const handleEditDrink = async (id, name, description, price, image) => {
+  const handleEditDrink = async (drinkData) => {
     clearMessages()
     
-    const result = await updateDrink(id, name, description, price, categoryId, image)
+    const result = await updateDrink(editingDrink.id, drinkData.name, drinkData.description, drinkData.price, categoryId)
     
     if (result.success) {
       setSuccess(result.message)

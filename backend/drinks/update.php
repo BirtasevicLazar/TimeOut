@@ -1,8 +1,8 @@
 <?php
 require_once '../database/cors.php';
 require_once '../database/db.php';
+require_once '../utils/security.php';
 require_once '../utils/session.php';
-require_once '../utils/image_upload.php';
 
 // Proveri da li je korisnik ulogovan
 requireLogin();
@@ -86,7 +86,7 @@ if ($category_id !== null && $category_id !== '') {
 
 try {
     // Prvo uzmi trenutne podatke o piću
-    $stmt = $conn->prepare("SELECT id, image_url FROM drinks WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id FROM drinks WHERE id = ?");
     $stmt->bind_param("i", $drink_id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -97,50 +97,14 @@ try {
         exit;
     }
     
-    $current_drink = $result->fetch_assoc();
-    $old_image_url = $current_drink['image_url'];
-    
-    // Proveri da li već postoji piće sa istim imenom (osim trenutnog)
-    $stmt = $conn->prepare("SELECT id FROM drinks WHERE name = ? AND id != ?");
-    $stmt->bind_param("si", $name, $drink_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows > 0) {
-        http_response_code(409);
-        echo json_encode(['error' => 'Piće sa tim imenom već postoji']);
-        exit;
-    }
-    
-    // Upravljaj slikom
-    $image_url = $old_image_url; // Zadrži staru sliku po default-u
-    
-    // Ako je nova slika upload-ovana
-    if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
-        $upload_result = uploadDrinkImage($_FILES['image']);
-        
-        if (!$upload_result['success']) {
-            http_response_code(400);
-            echo json_encode(['error' => $upload_result['error']]);
-            exit;
-        }
-        
-        $image_url = $upload_result['image_url'];
-    }
-    
     // Ažuriraj piće
-    $stmt = $conn->prepare("UPDATE drinks SET name = ?, description = ?, price = ?, image_url = ?, category_id = ? WHERE id = ?");
-    $stmt->bind_param("ssdsii", $name, $description, $price, $image_url, $category_id, $drink_id);
+    $stmt = $conn->prepare("UPDATE drinks SET name = ?, description = ?, price = ?, category_id = ? WHERE id = ?");
+    $stmt->bind_param("ssdii", $name, $description, $price, $category_id, $drink_id);
     
     if ($stmt->execute()) {
-        // Ako je slika uspešno ažurirana i bila je nova slika, obriši staru
-        if ($image_url !== $old_image_url && $old_image_url) {
-            deleteDrinkImage($old_image_url);
-        }
-        
         // Vrati ažurirano piće sa podacima o kategoriji
         $stmt = $conn->prepare("
-            SELECT d.id, d.name, d.description, d.price, d.image_url, d.category_id, c.name as category_name
+            SELECT d.id, d.name, d.description, d.price, d.category_id, c.name as category_name
             FROM drinks d 
             LEFT JOIN categories c ON d.category_id = c.id 
             WHERE d.id = ?
@@ -159,10 +123,6 @@ try {
             'drink' => $drink
         ]);
     } else {
-        // Obriši novu sliku ako se ažuriranje nije uspešno izvršilo
-        if ($image_url !== $old_image_url && $image_url) {
-            deleteDrinkImage($image_url);
-        }
         http_response_code(500);
         echo json_encode(['error' => 'Greška pri ažuriranju pića']);
     }

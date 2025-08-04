@@ -6,8 +6,7 @@ const DrinkForm = ({ drink = null, onSubmit, onCancel, isLoading = false }) => {
     name: '',
     description: '',
     price: '',
-    category_id: '',
-    image: null
+    category_id: ''
   })
   const [categories, setCategories] = useState([])
   const [errors, setErrors] = useState({})
@@ -25,8 +24,7 @@ const DrinkForm = ({ drink = null, onSubmit, onCancel, isLoading = false }) => {
         name: drink.name || '',
         description: drink.description || '',
         price: drink.price ? drink.price.toString() : '',
-        category_id: drink.category_id ? drink.category_id.toString() : '',
-        image: null
+        category_id: drink.category_id ? drink.category_id.toString() : ''
       })
     }
   }, [drink])
@@ -56,22 +54,6 @@ const DrinkForm = ({ drink = null, onSubmit, onCancel, isLoading = false }) => {
       setErrors(prev => ({
         ...prev,
         [name]: ''
-      }))
-    }
-  }
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]
-    setFormData(prev => ({
-      ...prev,
-      image: file
-    }))
-    
-    // Ukloni grešku za sliku
-    if (errors.image) {
-      setErrors(prev => ({
-        ...prev,
-        image: ''
       }))
     }
   }
@@ -110,8 +92,7 @@ const DrinkForm = ({ drink = null, onSubmit, onCancel, isLoading = false }) => {
       name: formData.name.trim(),
       description: formData.description.trim(),
       price: formData.price ? parseFloat(formData.price) : null,
-      category_id: parseInt(formData.category_id),
-      image: formData.image
+      category_id: parseInt(formData.category_id)
     }
 
     onSubmit(submitData)
@@ -203,27 +184,6 @@ const DrinkForm = ({ drink = null, onSubmit, onCancel, isLoading = false }) => {
         {loadingCategories && (
           <p className="mt-1 text-sm text-gray-500">Učitavanje kategorija...</p>
         )}
-      </div>
-
-      {/* Slika */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Slika pića
-        </label>
-        <input
-          type="file"
-          onChange={handleImageChange}
-          accept="image/*"
-          className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 ${
-            errors.image ? 'border-red-500' : 'border-gray-300'
-          }`}
-        />
-        {errors.image && (
-          <p className="mt-1 text-sm text-red-600">{errors.image}</p>
-        )}
-        <p className="mt-1 text-sm text-gray-500">
-          Podržani formati: JPG, PNG, GIF (max 5MB)
-        </p>
       </div>
 
       {/* Dugmad */}
