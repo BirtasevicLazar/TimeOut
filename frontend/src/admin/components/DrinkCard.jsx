@@ -18,12 +18,8 @@ const DrinkCard = ({ drink, onEdit, onDelete }) => {
           )}
         </div>
 
-        {/* Opis */}
-        {drink.description && (
-          <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-            {drink.description}
-          </p>
-        )}
+        {/* Placeholder prostor gde je bio opis da se ne poremeti razmak */}
+        <div className="mb-3 h-0" />
 
         {/* Cena */}
         <div className="mb-4">

@@ -23,7 +23,6 @@ if (!isset($_POST['_method']) || $_POST['_method'] !== 'PUT') {
 // Uzmi podatke iz form-data
 $drink_id = isset($_POST['id']) ? filter_var($_POST['id'], FILTER_VALIDATE_INT) : null;
 $name = isset($_POST['name']) ? trim($_POST['name']) : '';
-$description = isset($_POST['description']) ? trim($_POST['description']) : null;
 $price = isset($_POST['price']) ? $_POST['price'] : null;
 $category_id = isset($_POST['category_id']) ? $_POST['category_id'] : null;
 
@@ -97,14 +96,14 @@ try {
         exit;
     }
     
-    // Ažuriraj piće
-    $stmt = $conn->prepare("UPDATE drinks SET name = ?, description = ?, price = ?, category_id = ? WHERE id = ?");
-    $stmt->bind_param("ssdii", $name, $description, $price, $category_id, $drink_id);
+    // Ažuriraj piće bez description
+    $stmt = $conn->prepare("UPDATE drinks SET name = ?, price = ?, category_id = ? WHERE id = ?");
+    $stmt->bind_param("sdii", $name, $price, $category_id, $drink_id);
     
     if ($stmt->execute()) {
         // Vrati ažurirano piće sa podacima o kategoriji
         $stmt = $conn->prepare("
-            SELECT d.id, d.name, d.description, d.price, d.category_id, c.name as category_name
+            SELECT d.id, d.name, d.price, d.category_id, c.name as category_name
             FROM drinks d 
             LEFT JOIN categories c ON d.category_id = c.id 
             WHERE d.id = ?

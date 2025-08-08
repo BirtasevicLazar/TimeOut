@@ -14,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Uzmi podatke iz form-data
 $name = isset($_POST['name']) ? trim($_POST['name']) : '';
-$description = isset($_POST['description']) ? trim($_POST['description']) : null;
 $price = isset($_POST['price']) ? $_POST['price'] : null;
 $category_id = isset($_POST['category_id']) ? $_POST['category_id'] : null;
 
@@ -69,16 +68,16 @@ if ($category_id !== null && $category_id !== '') {
 }
 
 try {
-    // Kreiraj novo piće
-    $stmt = $conn->prepare("INSERT INTO drinks (name, description, price, category_id) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssdi", $name, $description, $price, $category_id);
+    // Kreiraj novo piće bez description
+    $stmt = $conn->prepare("INSERT INTO drinks (name, price, category_id) VALUES (?, ?, ?)");
+    $stmt->bind_param("sdi", $name, $price, $category_id);
     
     if ($stmt->execute()) {
         $drink_id = $conn->insert_id;
         
         // Vrati kreirano piće sa podacima o kategoriji
         $stmt = $conn->prepare("
-            SELECT d.id, d.name, d.description, d.price, d.category_id, c.name as category_name
+            SELECT d.id, d.name, d.price, d.category_id, c.name as category_name
             FROM drinks d 
             LEFT JOIN categories c ON d.category_id = c.id 
             WHERE d.id = ?

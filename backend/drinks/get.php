@@ -24,7 +24,7 @@ try {
         }
         
         $stmt = $conn->prepare("
-            SELECT d.id, d.name, d.description, d.price, d.category_id, c.name as category_name
+            SELECT d.id, d.name, d.price, d.category_id, c.name as category_name
             FROM drinks d 
             LEFT JOIN categories c ON d.category_id = c.id 
             WHERE d.id = ?
@@ -54,7 +54,7 @@ try {
         
         if ($category_filter) {
             $stmt = $conn->prepare("
-                SELECT d.id, d.name, d.description, d.price, d.category_id, c.name as category_name
+                SELECT d.id, d.name, d.price, d.category_id, c.name as category_name
                 FROM drinks d 
                 LEFT JOIN categories c ON d.category_id = c.id 
                 WHERE d.category_id = ?
@@ -63,7 +63,7 @@ try {
             $stmt->bind_param("i", $category_filter);
         } else {
             $stmt = $conn->prepare("
-                SELECT d.id, d.name, d.description, d.price, d.category_id, c.name as category_name
+                SELECT d.id, d.name, d.price, d.category_id, c.name as category_name
                 FROM drinks d 
                 LEFT JOIN categories c ON d.category_id = c.id 
                 ORDER BY d.name ASC

@@ -99,18 +99,14 @@ const DrinksManager = () => {
         result = await updateDrink(
           editingDrink.id,
           formData.name,
-          formData.description,
           formData.price,
-          formData.category_id,
-          formData.image
+          formData.category_id
         )
       } else {
         result = await createDrink(
           formData.name,
-          formData.description,
           formData.price,
-          formData.category_id,
-          formData.image
+          formData.category_id
         )
       }
 
@@ -146,8 +142,7 @@ const DrinksManager = () => {
   // Filtriraj i sortiraj pića
   const filteredAndSortedDrinks = drinks
     .filter(drink => {
-      const matchesSearch = drink.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           (drink.description && drink.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      const matchesSearch = drink.name.toLowerCase().includes(searchTerm.toLowerCase())
       const matchesCategory = !filterCategory || drink.category_id?.toString() === filterCategory
       return matchesSearch && matchesCategory
     })

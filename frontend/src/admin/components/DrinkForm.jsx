@@ -4,7 +4,6 @@ import { getCategories } from '../utils/categories'
 const DrinkForm = ({ drink = null, onSubmit, onCancel, isLoading = false }) => {
   const [formData, setFormData] = useState({
     name: '',
-    description: '',
     price: '',
     category_id: ''
   })
@@ -22,7 +21,6 @@ const DrinkForm = ({ drink = null, onSubmit, onCancel, isLoading = false }) => {
     if (drink) {
       setFormData({
         name: drink.name || '',
-        description: drink.description || '',
         price: drink.price ? drink.price.toString() : '',
         category_id: drink.category_id ? drink.category_id.toString() : ''
       })
@@ -90,7 +88,6 @@ const DrinkForm = ({ drink = null, onSubmit, onCancel, isLoading = false }) => {
 
     const submitData = {
       name: formData.name.trim(),
-      description: formData.description.trim(),
       price: formData.price ? parseFloat(formData.price) : null,
       category_id: parseInt(formData.category_id)
     }
@@ -118,21 +115,6 @@ const DrinkForm = ({ drink = null, onSubmit, onCancel, isLoading = false }) => {
         {errors.name && (
           <p className="mt-1 text-sm text-red-600">{errors.name}</p>
         )}
-      </div>
-
-      {/* Opis */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Opis
-        </label>
-        <textarea
-          name="description"
-          value={formData.description}
-          onChange={handleInputChange}
-          rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-          placeholder="Unesite opis pića (opcionalno)"
-        />
       </div>
 
       {/* Cena */}

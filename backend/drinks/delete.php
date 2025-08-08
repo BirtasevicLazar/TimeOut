@@ -36,7 +36,7 @@ if (!$drink_id || $drink_id <= 0) {
 try {
     // Prvo proveri da li piće postoji i uzmi podatke za odgovor
     $stmt = $conn->prepare("
-        SELECT d.id, d.name, d.description, d.price, d.category_id, c.name as category_name
+        SELECT d.id, d.name, d.price, d.category_id, c.name as category_name
         FROM drinks d 
         LEFT JOIN categories c ON d.category_id = c.id 
         WHERE d.id = ?

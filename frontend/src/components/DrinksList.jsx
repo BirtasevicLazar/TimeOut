@@ -19,13 +19,6 @@ const DrinkCard = ({ drink }) => {
         </div>
       </div>
       
-      {/* Description */}
-      {drink.description && (
-        <p className="text-gray-600 text-sm leading-relaxed italic mb-4">
-          {drink.description}
-        </p>
-      )}
-      
       {/* Decorative elements */}
       <div className="flex items-center justify-between">
         <div className="flex-1 border-b border-dotted border-gray-300 group-hover:border-orange-300 transition-colors"></div>

@@ -66,20 +66,16 @@ export const getDrink = async (id) => {
 }
 
 // Kreiraj novo piće
-export const createDrink = async (name, description = '', price = null, categoryId = null) => {
+export const createDrink = async (name, price = null, categoryId = null) => {
   try {
     const formData = new FormData()
     formData.append('name', name)
-    formData.append('description', description)
-    
     if (price !== null && price !== '') {
       formData.append('price', price)
     }
-    
     if (categoryId !== null && categoryId !== '') {
       formData.append('category_id', categoryId)
     }
-
     const response = await fetch(getApiUrl('/drinks/create.php'), {
       method: 'POST',
       credentials: 'include',
@@ -99,22 +95,18 @@ export const createDrink = async (name, description = '', price = null, category
 }
 
 // Ažuriraj piće
-export const updateDrink = async (id, name, description = '', price = null, categoryId = null) => {
+export const updateDrink = async (id, name, price = null, categoryId = null) => {
   try {
     const formData = new FormData()
     formData.append('_method', 'PUT')
     formData.append('id', id)
     formData.append('name', name)
-    formData.append('description', description)
-    
     if (price !== null && price !== '') {
       formData.append('price', price)
     }
-    
     if (categoryId !== null && categoryId !== '') {
       formData.append('category_id', categoryId)
     }
-
     const response = await fetch(getApiUrl('/drinks/update.php'), {
       method: 'POST',
       credentials: 'include',
