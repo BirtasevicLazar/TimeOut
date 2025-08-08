@@ -4,6 +4,7 @@ import { getImageUrl, getApiUrl } from '../utils/api'
 import { getPartyCategoriesCache, setPartyCategoriesCache, isCacheValid, cacheKeys } from '../utils/cache'
 import PartyNavbar from './PartyNavbar'
 import DrinksList from './DrinksList'
+import Footer from './Footer'
 import { useCacheInvalidation } from '../hooks/useCacheInvalidation'
 
 const CategoryCard = ({ category, onClick }) => {
@@ -223,6 +224,7 @@ const PartyCategories = () => {
             </div>
           </div>
         </div>
+        <Footer />
       </>
     )
   }
@@ -231,6 +233,7 @@ const PartyCategories = () => {
     <>
       <PartyNavbar />
       <PartyContent />
+      <Footer />
     </>
   )
 }

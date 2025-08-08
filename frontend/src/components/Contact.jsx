@@ -40,15 +40,9 @@ const Contact = ({ isPartyContext = false }) => {
         </svg>
       ),
       title: 'Radno vreme',
-      info: 'Pon - Ned: 08:00 - 02:00',
-      subInfo: 'Kuhinja radi do 01:00'
+      info: 'Ponedeljak - Nedelja',
+      subInfo: '7:30 - 00:00'
     }
-  ]
-
-  const workingHours = [
-    { day: 'Ponedeljak - Četvrtak', hours: '08:00 - 02:00' },
-    { day: 'Petak - Subota', hours: '08:00 - 03:00' },
-    { day: 'Nedelja', hours: '08:00 - 02:00' }
   ]
 
   return (

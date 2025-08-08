@@ -5,6 +5,10 @@ ini_set('session.use_only_cookies', 1); // Samo cookies, ne URL
 ini_set('session.cookie_secure', 0);    // Postaviti na 1 za HTTPS
 ini_set('session.cookie_samesite', 'Strict'); // CSRF zaštita
 
+// Trajanje sesije 2h
+ini_set('session.gc_maxlifetime', 7200);
+session_set_cookie_params(7200);
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -19,8 +23,8 @@ if (!isset($_SESSION['last_regeneration'])) {
     }
 }
 
-// Session timeout (4 sata umesto 2)
-if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 14400)) {
+// Session timeout sada 2 sata (7200s)
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 7200)) {
     session_unset();
     session_destroy();
     if (session_status() === PHP_SESSION_NONE) {

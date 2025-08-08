@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import AdminLogin from '../components/AdminLogin'
 import AdminDashboard from '../components/AdminDashboard'
@@ -8,36 +8,72 @@ import CategoryDrinksManager from '../components/CategoryDrinksManager'
 import DrinksManager from '../components/DrinksManager'
 import ScrollToTop from '../../components/ScrollToTop'
 import useScrollToTop from '../../hooks/useScrollToTop'
-import { checkAuthStatus, getCurrentUser } from '../utils/auth'
+import { checkAuthStatus, getCurrentUser, hasSessionExpired, logoutAdmin } from '../utils/auth'
 
 const AdminApp = () => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const sessionCheckIntervalRef = useRef(null)
   
   // Hook za automatsko skrolovanje na vrh pri promeni admin rute
   useScrollToTop()
 
   useEffect(() => {
     initializeAuth()
+    // Periodična provera svakih 60 sekundi
+    sessionCheckIntervalRef.current = setInterval(handleSessionCheck, 60000)
+    return () => {
+      if (sessionCheckIntervalRef.current) clearInterval(sessionCheckIntervalRef.current)
+    }
   }, [])
+
+  const handleSessionCheck = async () => {
+    // Lokalna provera
+    if (hasSessionExpired && hasSessionExpired()) {
+      await logoutAdmin()
+      handleLogout()
+      return
+    }
+    // Server provera (tihi refresh)
+    const result = await checkAuthStatus()
+    if (!result.success) {
+      if (result.expired) {
+        await logoutAdmin()
+      }
+      handleLogout()
+    }
+  }
 
   const initializeAuth = async () => {
     setLoading(true)
-    
-    // Jednostavno - proveri localStorage i to je to
     const localUser = getCurrentUser()
     if (localUser) {
       setUser(localUser)
       setIsAuthenticated(true)
     }
-    
+
+    // Uvek proveri server (me.php) da bi uhvatio validnu sesiju i produžio je
+    const result = await checkAuthStatus()
+    if (result.success) {
+      setUser(result.user)
+      setIsAuthenticated(true)
+    } else if (localUser) {
+      // Lokalno je postojalo ali server kaže da je isteklo
+      handleLogout()
+    }
+
     setLoading(false)
   }
 
-  const handleLoginSuccess = (userData) => {
+  const handleLoginSuccess = async (userData) => {
     setUser(userData)
     setIsAuthenticated(true)
+    // Odmah potvrdi i osveži server sesiju
+    const result = await checkAuthStatus()
+    if (!result.success) {
+      handleLogout()
+    }
   }
 
   const handleLogout = () => {

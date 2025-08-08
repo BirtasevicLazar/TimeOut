@@ -34,40 +34,88 @@ function uploadCategoryImage($file) {
         return ['success' => false, 'error' => 'Slika ne može biti veća od 5MB'];
     }
     
-    // Generiši sigurno ime fajla (bez originalnog imena)
-    $safe_extension = $file_extension === 'jpeg' ? 'jpg' : $file_extension;
-    $new_filename = uniqid('category_') . '_' . time() . '.' . $safe_extension;
+    // Generiši bazu imena fajla
+    $base_filename = uniqid('category_') . '_' . time();
     
     // Definiši putanje
     $upload_dir = __DIR__ . '/../uploads/categories/';
-    $file_path = $upload_dir . $new_filename;
     
-    // SIGURNOST: Proveri da putanja ne izlazi iz upload direktorijuma
-    $real_upload_dir = realpath($upload_dir);
-    $real_file_path = realpath(dirname($file_path)) . '/' . basename($file_path);
-    
-    if (strpos($real_file_path, $real_upload_dir) !== 0) {
-        return ['success' => false, 'error' => 'Nedozvoljena putanja fajla'];
-    }
-    
-    // Kreiranje direktorijuma ako ne postoji
+    // SIGURNOST: Kreiranje direktorijuma ako ne postoji
     if (!is_dir($upload_dir)) {
         if (!mkdir($upload_dir, 0755, true)) {
             return ['success' => false, 'error' => 'Greška pri kreiranju upload direktorijuma'];
         }
     }
     
-    // Premesti fajl
-    if (move_uploaded_file($file['tmp_name'], $file_path)) {
-        // SIGURNOST: Promeni permisije fajla
-        chmod($file_path, 0644);
-        
-        // Vrati relativnu putanju za bazu
-        $relative_path = 'backend/uploads/categories/' . $new_filename;
-        return ['success' => true, 'image_url' => $relative_path, 'filename' => $new_filename];
-    } else {
-        return ['success' => false, 'error' => 'Greška pri čuvanju fajla'];
+    // Detektuj da li je GIF (potencijalno animiran) - ako jeste, NE konvertujemo (gubimo animaciju)
+    $is_gif = ($real_file_type === 'image/gif');
+    
+    // Ako je već webp i nije GIF, samo ga premesti (rename)
+    $shouldConvertToWebp = !$is_gif && $real_file_type !== 'image/webp';
+    
+    // Privremena putanja finalnog fajla (ako ne konvertujemo)
+    $original_safe_ext = $file_extension === 'jpeg' ? 'jpg' : $file_extension;
+    $target_original_path = $upload_dir . $base_filename . '.' . $original_safe_ext;
+    
+    // Finalna WebP putanja
+    $target_webp_path = $upload_dir . $base_filename . '.webp';
+    
+    if (!$shouldConvertToWebp) {
+        // Samo premesti original (gif ili već webp)
+        if (!move_uploaded_file($file['tmp_name'], $shouldConvertToWebp ? $target_webp_path : ($real_file_type === 'image/webp' ? $target_webp_path : $target_original_path))) {
+            return ['success' => false, 'error' => 'Greška pri čuvanju fajla'];
+        }
+        // Ako je već webp, obezbedi ispravno ime
+        if ($real_file_type === 'image/webp') {
+            chmod($target_webp_path, 0644);
+            $relative_path = 'backend/uploads/categories/' . basename($target_webp_path);
+        } else { // gif
+            chmod($target_original_path, 0644);
+            $relative_path = 'backend/uploads/categories/' . basename($target_original_path);
+        }
+        return ['success' => true, 'image_url' => $relative_path, 'filename' => basename($relative_path)];
     }
+    
+    // Pokušaj konverzije u WebP
+    $imageResource = null;
+    switch ($real_file_type) {
+        case 'image/jpeg':
+            $imageResource = imagecreatefromjpeg($file['tmp_name']);
+            break;
+        case 'image/png':
+            $imageResource = imagecreatefrompng($file['tmp_name']);
+            // Očuvaj transparenciju
+            imagepalettetotruecolor($imageResource);
+            imagealphablending($imageResource, true);
+            imagesavealpha($imageResource, true);
+            break;
+        case 'image/webp':
+            $imageResource = imagecreatefromwebp($file['tmp_name']);
+            break;
+        default:
+            // Fallback: premesti bez konverzije
+            if (!move_uploaded_file($file['tmp_name'], $target_original_path)) {
+                return ['success' => false, 'error' => 'Greška pri čuvanju fajla'];
+            }
+            chmod($target_original_path, 0644);
+            $relative_path = 'backend/uploads/categories/' . basename($target_original_path);
+            return ['success' => true, 'image_url' => $relative_path, 'filename' => basename($relative_path)];
+    }
+    
+    if (!$imageResource) {
+        return ['success' => false, 'error' => 'Neuspešno učitavanje slike'];
+    }
+    
+    // Konverzija u WebP (kvalitet 80)
+    if (!imagewebp($imageResource, $target_webp_path, 80)) {
+        imagedestroy($imageResource);
+        return ['success' => false, 'error' => 'Neuspešna konverzija u WebP'];
+    }
+    imagedestroy($imageResource);
+    
+    chmod($target_webp_path, 0644);
+    $relative_path = 'backend/uploads/categories/' . basename($target_webp_path);
+    return ['success' => true, 'image_url' => $relative_path, 'filename' => basename($relative_path)];
 }
 
 function deleteCategoryImage($image_url) {
