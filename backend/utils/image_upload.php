@@ -49,34 +49,23 @@ function uploadCategoryImage($file) {
     
     // Detektuj da li je GIF (potencijalno animiran) - ako jeste, NE konvertujemo (gubimo animaciju)
     $is_gif = ($real_file_type === 'image/gif');
-    
-    // Ako je već webp i nije GIF, samo ga premesti (rename)
-    $shouldConvertToWebp = !$is_gif && $real_file_type !== 'image/webp';
-    
-    // Privremena putanja finalnog fajla (ako ne konvertujemo)
-    $original_safe_ext = $file_extension === 'jpeg' ? 'jpg' : $file_extension;
-    $target_original_path = $upload_dir . $base_filename . '.' . $original_safe_ext;
-    
+
     // Finalna WebP putanja
     $target_webp_path = $upload_dir . $base_filename . '.webp';
-    
-    if (!$shouldConvertToWebp) {
-        // Samo premesti original (gif ili već webp)
-        if (!move_uploaded_file($file['tmp_name'], $shouldConvertToWebp ? $target_webp_path : ($real_file_type === 'image/webp' ? $target_webp_path : $target_original_path))) {
+
+    if ($is_gif) {
+        // Samo premesti GIF bez konverzije
+        $original_safe_ext = $file_extension === 'jpeg' ? 'jpg' : $file_extension;
+        $target_original_path = $upload_dir . $base_filename . '.' . $original_safe_ext;
+        if (!move_uploaded_file($file['tmp_name'], $target_original_path)) {
             return ['success' => false, 'error' => 'Greška pri čuvanju fajla'];
         }
-        // Ako je već webp, obezbedi ispravno ime
-        if ($real_file_type === 'image/webp') {
-            chmod($target_webp_path, 0644);
-            $relative_path = 'backend/uploads/categories/' . basename($target_webp_path);
-        } else { // gif
-            chmod($target_original_path, 0644);
-            $relative_path = 'backend/uploads/categories/' . basename($target_original_path);
-        }
+        chmod($target_original_path, 0644);
+        $relative_path = 'backend/uploads/categories/' . basename($target_original_path);
         return ['success' => true, 'image_url' => $relative_path, 'filename' => basename($relative_path)];
     }
-    
-    // Pokušaj konverzije u WebP
+
+    // Za sve ostale slike (jpeg, png, webp) - konvertuj u WebP
     $imageResource = null;
     switch ($real_file_type) {
         case 'image/jpeg':
@@ -93,26 +82,20 @@ function uploadCategoryImage($file) {
             $imageResource = imagecreatefromwebp($file['tmp_name']);
             break;
         default:
-            // Fallback: premesti bez konverzije
-            if (!move_uploaded_file($file['tmp_name'], $target_original_path)) {
-                return ['success' => false, 'error' => 'Greška pri čuvanju fajla'];
-            }
-            chmod($target_original_path, 0644);
-            $relative_path = 'backend/uploads/categories/' . basename($target_original_path);
-            return ['success' => true, 'image_url' => $relative_path, 'filename' => basename($relative_path)];
+            return ['success' => false, 'error' => 'Nepodržan format slike za konverziju'];
     }
-    
+
     if (!$imageResource) {
         return ['success' => false, 'error' => 'Neuspešno učitavanje slike'];
     }
-    
+
     // Konverzija u WebP (kvalitet 80)
     if (!imagewebp($imageResource, $target_webp_path, 80)) {
         imagedestroy($imageResource);
         return ['success' => false, 'error' => 'Neuspešna konverzija u WebP'];
     }
     imagedestroy($imageResource);
-    
+
     chmod($target_webp_path, 0644);
     $relative_path = 'backend/uploads/categories/' . basename($target_webp_path);
     return ['success' => true, 'image_url' => $relative_path, 'filename' => basename($relative_path)];
